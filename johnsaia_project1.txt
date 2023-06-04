@@ -1,0 +1,123 @@
+SQL> --Project 1
+SQL> 
+SQL> SET SERVEROUTPUT ON SIZE UNLIMITED;
+SQL> 
+SQL> /*Write a local PL/SQL gluing function that glues two string parameter inputs together
+SQL> with an intervening white space, and returns a single string value from the function.*/
+SQL> 
+SQL> -- Task A 1
+SQL> CREATE OR REPLACE FUNCTION join_strings
+  2  (string1 VARCHAR2,
+  3   string2 VARCHAR2) RETURN VARCHAR2 IS
+  4  BEGIN
+  5      RETURN string1 ||' '|| string2;
+  6  END;
+  7  /
+
+Function created.
+
+SQL> 
+SQL> -- Test Case Task A 1
+SQL> 
+SQL>  /*Write a test case for the local gluing function by adding a local lv_results
+SQL>  variable in the declaration section, then call the gluing function with the two
+SQL>  local variables and assign the value to the third variable.
+SQL>  Print the lv_results variable's value inside a call to the put_line
+SQL>  procedure of the dbms_output package.*/
+SQL> 
+SQL> DECLARE
+  2   lv_string1 VARCHAR2(3) := 'Dig';
+  3   lv_string2 VARCHAR2(3) := 'Dug';
+  4   lv_results VARCHAR2(8);
+  5  BEGIN
+  6   lv_results := join_strings(lv_string1,lv_string2);
+  7   DBMS_OUTPUT.PUT_LINE(lv_results);
+  8  END;
+  9  /
+Dig Dug                                                                         
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- Task A 2
+SQL> 
+SQL> /*Write a local PL/SQL printing procedure that takes a single parameter input and
+SQL>  prints the contents with the dbms_output package*/
+SQL> 
+SQL>  CREATE OR REPLACE PROCEDURE format_string
+  2   (string_in IN OUT VARCHAR2) IS
+  3   BEGIN
+  4    DBMS_OUTPUT.PUT_LINE(string_in);
+  5   END;
+  6   /
+
+Procedure created.
+
+SQL> 
+SQL> --Test Case Task A 2
+SQL> 
+SQL> /*Write a test case for the local printing procedure by calling it with one of the
+SQL>  local variables.*/
+SQL> 
+SQL> DECLARE
+  2   lv_print VARCHAR2(5) := 'Hello';
+  3  BEGIN
+  4   format_string(lv_print);
+  5  END;
+  6  /
+Hello                                                                           
+
+PL/SQL procedure successfully completed.
+
+SQL> -- Task A 3
+SQL> 
+SQL> /*Write an anonymous PL/SQL block program that declares two local variables in the
+SQL>  declaration block, assigns two substitution variables to the locally declared
+SQL>  variables in the execution block, and inside the execution block calls the local
+SQL>  gluing function with the two local variables as the only call parameter to the
+SQL>  printing procedure.*/
+SQL> 
+SQL> DECLARE
+  2   lv_input1 VARCHAR2(5) := '&input';
+  3   lv_input2 VARCHAR2(6) := '&input';
+  4   lv_results VARCHAR2(12);
+  5   BEGIN
+  6   lv_results := join_strings(lv_input1,lv_input2);
+  7   format_string(lv_results);
+  8   END;
+  9   /
+Enter value for input: Hi
+old   2:  lv_input1 VARCHAR2(5) := '&input';
+new   2:  lv_input1 VARCHAR2(5) := 'Hi';
+Enter value for input: Hello
+old   3:  lv_input2 VARCHAR2(6) := '&input';
+new   3:  lv_input2 VARCHAR2(6) := 'Hello';
+Hi Hello                                                                        
+
+PL/SQL procedure successfully completed.
+
+SQL> --Test Case Task A 3
+SQL> 
+SQL> /*Write a test case by running the anonymous PL/SQL block and, when prompted
+SQL>  for the substitution variables, provide values such as `Harry' and `Potter'.*/
+SQL> 
+SQL> DECLARE
+  2   lv_input1 VARCHAR2(5) := '&input';
+  3   lv_input2 VARCHAR2(6) := '&input';
+  4   lv_results VARCHAR2(12);
+  5  BEGIN
+  6   lv_results := join_strings(lv_input1,lv_input2);
+  7   format_string(lv_results);
+  8  END;
+  9  /
+Enter value for input: Harry
+old   2:  lv_input1 VARCHAR2(5) := '&input';
+new   2:  lv_input1 VARCHAR2(5) := 'Harry';
+Enter value for input: Potter
+old   3:  lv_input2 VARCHAR2(6) := '&input';
+new   3:  lv_input2 VARCHAR2(6) := 'Potter';
+Harry Potter                                                                    
+
+PL/SQL procedure successfully completed.
+
+SQL> spool off

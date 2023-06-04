@@ -1,0 +1,45 @@
+SQL> SET SERVEROUTPUT ON SIZE UNLIMITED;
+SQL> SET LINESIZE 700;
+SQL> 
+SQL> -- Project 3 Case: Working with More Movies Rentals
+SQL> 
+SQL> --Create function
+SQL> 
+SQL> create or replace
+  2  FUNCTION movie_stock
+  3    (movie_id_arg IN NUMBER)
+  4   RETURN VARCHAR2
+  5   IS
+  6    TYPE type_movie_info IS RECORD
+  7    (movie_title mm_movie.movie_title%TYPE,
+  8     movie_qty mm_movie.movie_qty%TYPE);
+  9    rec_movie_info type_movie_info;
+ 10    lv_message VARCHAR2(60);
+ 11  BEGIN
+ 12   SELECT movie_title, movie_qty
+ 13   INTO rec_movie_info
+ 14   FROM mm_movie
+ 15   WHERE movie_id = movie_id_arg;
+ 16   lv_message := rec_movie_info.movie_title||' is Available: '||rec_movie_info.movie_qty||' on the shelf';
+ 17   RETURN lv_message;
+ 18  END;
+ 19  /
+
+Function created.
+
+SQL> 
+SQL> -- Execute example of function use
+SQL> 
+SQL> DECLARE
+  2   lv_message_txt VARCHAR2(60);
+  3   lv_movie_id_choice mm_movie.movie_id%TYPE := 3;
+  4  BEGIN
+  5   lv_message_txt := movie_stock(lv_movie_id_choice);
+  6   DBMS_OUTPUT.PUT_LINE(lv_message_txt);
+  7  END;
+  8  /
+Star Wars is Available: 11 on the shelf                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+
+PL/SQL procedure successfully completed.
+
+SQL> spool off

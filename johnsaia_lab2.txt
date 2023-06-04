@@ -1,0 +1,494 @@
+SQL> --Hands-On Assignment 3
+SQL> 
+SQL> connect brewbeans/brewbeans@localhost:1521/XEPDB1;
+Connected.
+SQL> 
+SQL> SET SERVEROUTPUT ON SIZE UNLIMITED;
+SQL> 
+SQL> -- 3-3: Processing Database Data with IF Statements
+SQL> 
+SQL> --1st run of script
+SQL> 
+SQL> DECLARE
+  2   lv_total_num NUMBER(6,2);
+  3   lv_rating_txt VARCHAR2(4);
+  4   lv_shop_num bb_basket.idshopper%TYPE := 22;
+  5  BEGIN
+  6   SELECT SUM(total)
+  7    INTO lv_total_num
+  8    FROM bb_basket
+  9    WHERE idShopper = lv_shop_num
+ 10      AND orderplaced = 1
+ 11    GROUP BY idshopper;
+ 12    IF lv_total_num > 200 THEN
+ 13      lv_rating_txt := 'HIGH';
+ 14    ELSIF lv_total_num > 100 THEN
+ 15      lv_rating_txt := 'MID';
+ 16    ELSE
+ 17      lv_rating_txt := 'LOW';
+ 18    END IF;
+ 19     DBMS_OUTPUT.PUT_LINE('Shopper '||lv_shop_num||' is rated '||lv_rating_txt);
+ 20  END;
+ 21  /
+Shopper 22 is rated HIGH                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- Check script
+SQL> 
+SQL> SELECT SUM(total)
+  2  FROM bb_basket
+  3  WHERE idShopper = 22
+  4  AND orderplaced = 1
+  5  GROUP BY idshopper;
+
+SUM(TOTAL)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+----------                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+    210.21                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+
+SQL> 
+SQL> -- Shopper 21 run
+SQL> 
+SQL> DECLARE
+  2   lv_total_num NUMBER(6,2);
+  3   lv_rating_txt VARCHAR2(4);
+  4   lv_shop_num bb_basket.idshopper%TYPE := 21;
+  5  BEGIN
+  6   SELECT SUM(total)
+  7    INTO lv_total_num
+  8    FROM bb_basket
+  9    WHERE idShopper = lv_shop_num
+ 10      AND orderplaced = 1
+ 11    GROUP BY idshopper;
+ 12    IF lv_total_num > 200 THEN
+ 13      lv_rating_txt := 'HIGH';
+ 14    ELSIF lv_total_num > 100 THEN
+ 15      lv_rating_txt := 'MID';
+ 16    ELSE
+ 17      lv_rating_txt := 'LOW';
+ 18    END IF;
+ 19     DBMS_OUTPUT.PUT_LINE('Shopper '||lv_shop_num||' is rated '||lv_rating_txt);
+ 20  END;
+ 21  /
+Shopper 21 is rated LOW                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- Shopper 23 run
+SQL> 
+SQL> DECLARE
+  2   lv_total_num NUMBER(6,2);
+  3   lv_rating_txt VARCHAR2(4);
+  4   lv_shop_num bb_basket.idshopper%TYPE := 23;
+  5  BEGIN
+  6   SELECT SUM(total)
+  7    INTO lv_total_num
+  8    FROM bb_basket
+  9    WHERE idShopper = lv_shop_num
+ 10      AND orderplaced = 1
+ 11    GROUP BY idshopper;
+ 12    IF lv_total_num > 200 THEN
+ 13      lv_rating_txt := 'HIGH';
+ 14    ELSIF lv_total_num > 100 THEN
+ 15      lv_rating_txt := 'MID';
+ 16    ELSE
+ 17      lv_rating_txt := 'LOW';
+ 18    END IF;
+ 19     DBMS_OUTPUT.PUT_LINE('Shopper '||lv_shop_num||' is rated '||lv_rating_txt);
+ 20  END;
+ 21  /
+Shopper 23 is rated LOW                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- 3-4: Using Searched CASE Statements
+SQL> 
+SQL> -- 1st run of script
+SQL> 
+SQL> DECLARE
+  2   lv_total_num NUMBER(6,2);
+  3   lv_rating_txt VARCHAR2(4);
+  4   lv_shop_num bb_basket.idshopper%TYPE := 22;
+  5  BEGIN
+  6   SELECT SUM(total)
+  7    INTO lv_total_num
+  8    FROM bb_basket
+  9    WHERE idShopper = lv_shop_num
+ 10      AND orderplaced = 1
+ 11    GROUP BY idshopper;
+ 12    CASE
+ 13      WHEN lv_total_num > 200 THEN
+ 14          lv_rating_txt := 'HIGH';
+ 15      WHEN lv_total_num > 100 THEN
+ 16          lv_rating_txt := 'MID';
+ 17      ELSE
+ 18          lv_rating_txt := 'LOW';
+ 19     END CASE;
+ 20     DBMS_OUTPUT.PUT_LINE('Shopper '||lv_shop_num||' is rated '||lv_rating_txt);
+ 21  END;
+ 22  /
+Shopper 22 is rated HIGH                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- Check script
+SQL> 
+SQL> SELECT SUM(total)
+  2  FROM bb_basket
+  3  WHERE idShopper = 22
+  4  AND orderplaced = 1
+  5  GROUP BY idshopper;
+
+SUM(TOTAL)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+----------                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+    210.21                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+
+SQL> 
+SQL> -- Shopper 21 run
+SQL> 
+SQL> DECLARE
+  2   lv_total_num NUMBER(6,2);
+  3   lv_rating_txt VARCHAR2(4);
+  4   lv_shop_num bb_basket.idshopper%TYPE := 21;
+  5  BEGIN
+  6   SELECT SUM(total)
+  7    INTO lv_total_num
+  8    FROM bb_basket
+  9    WHERE idShopper = lv_shop_num
+ 10      AND orderplaced = 1
+ 11    GROUP BY idshopper;
+ 12    CASE
+ 13      WHEN lv_total_num > 200 THEN
+ 14          lv_rating_txt := 'HIGH';
+ 15      WHEN lv_total_num > 100 THEN
+ 16          lv_rating_txt := 'MID';
+ 17      ELSE
+ 18          lv_rating_txt := 'LOW';
+ 19     END CASE;
+ 20     DBMS_OUTPUT.PUT_LINE('Shopper '||lv_shop_num||' is rated '||lv_rating_txt);
+ 21  END;
+ 22  /
+Shopper 21 is rated LOW                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- Shopper 23 run
+SQL> 
+SQL> DECLARE
+  2   lv_total_num NUMBER(6,2);
+  3   lv_rating_txt VARCHAR2(4);
+  4   lv_shop_num bb_basket.idshopper%TYPE := 23;
+  5  BEGIN
+  6   SELECT SUM(total)
+  7    INTO lv_total_num
+  8    FROM bb_basket
+  9    WHERE idShopper = lv_shop_num
+ 10      AND orderplaced = 1
+ 11    GROUP BY idshopper;
+ 12    CASE
+ 13      WHEN lv_total_num > 200 THEN
+ 14          lv_rating_txt := 'HIGH';
+ 15      WHEN lv_total_num > 100 THEN
+ 16          lv_rating_txt := 'MID';
+ 17      ELSE
+ 18          lv_rating_txt := 'LOW';
+ 19     END CASE;
+ 20     DBMS_OUTPUT.PUT_LINE('Shopper '||lv_shop_num||' is rated '||lv_rating_txt);
+ 21  END;
+ 22  /
+Shopper 23 is rated LOW                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- 3-5: Using a WHILE Loop
+SQL> 
+SQL> -- first run of script
+SQL> 
+SQL> DECLARE
+  2  lv_total_spend_amt NUMBER(6,2) := 100.00;
+  3  lv_product_id bb_product.idproduct%TYPE := 4;
+  4  lv_price bb_product.price%TYPE;
+  5  lv_counter NUMBER(4) := 0;
+  6  BEGIN
+  7  SELECT price
+  8   INTO lv_price
+  9   FROM bb_product
+ 10   WHERE idproduct = lv_product_id;
+ 11      WHILE lv_total_spend_amt >= lv_price LOOP
+ 12          lv_total_spend_amt := lv_total_spend_amt - lv_price;
+ 13          lv_counter := lv_counter + 1;
+ 14      END LOOP;
+ 15   DBMS_OUTPUT.PUT_LINE('The quantity of product id '||lv_product_id||' that you can purchase is '||lv_counter);
+ 16  END;
+ 17  /
+The quantity of product id 4 that you can purchase is 3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- amount and product of my choice run
+SQL> 
+SQL> DECLARE
+  2  lv_total_spend_amt NUMBER(6,2) := 150.00;
+  3  lv_product_id bb_product.idproduct%TYPE := 5;
+  4  lv_price bb_product.price%TYPE;
+  5  lv_counter NUMBER(4) := 0;
+  6  BEGIN
+  7  SELECT price
+  8   INTO lv_price
+  9   FROM bb_product
+ 10   WHERE idproduct = lv_product_id;
+ 11      WHILE lv_total_spend_amt >= lv_price LOOP
+ 12          lv_total_spend_amt := lv_total_spend_amt - lv_price;
+ 13          lv_counter := lv_counter + 1;
+ 14      END LOOP;
+ 15   DBMS_OUTPUT.PUT_LINE('The quantity of product id '||lv_product_id||' that you can purchase is '||lv_counter);
+ 16  END;
+ 17  /
+The quantity of product id 5 that you can purchase is 14                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- 3-6: Working with IF Statements
+SQL> 
+SQL> -- test using basket_id 5
+SQL> 
+SQL> DECLARE
+  2  lv_quantity bb_basket.quantity%TYPE;
+  3  lv_basket_id bb_basket.idbasket%TYPE := 5;
+  4  lv_shipping_cost NUMBER(4,2);
+  5  BEGIN
+  6  SELECT quantity
+  7   INTO lv_quantity
+  8   FROM bb_basket
+  9   WHERE idbasket = lv_basket_id;
+ 10      IF lv_quantity < 0 THEN
+ 11          lv_shipping_cost := 0;
+ 12      ELSIF lv_quantity <= 3 THEN
+ 13          lv_shipping_cost := 5.00;
+ 14      ELSIF lv_quantity >= 4 AND lv_quantity <= 6 THEN
+ 15          lv_shipping_cost := 7.50;
+ 16      ELSIF lv_quantity >= 7 AND lv_quantity <= 10 THEN
+ 17          lv_shipping_cost := 10.00;
+ 18      ELSE
+ 19          lv_shipping_cost := 12.00;
+ 20      END IF;
+ 21    DBMS_OUTPUT.PUT_LINE('The basket contains '||lv_quantity||' items, so the shipping cost is'||TO_CHAR(lv_shipping_cost,'$99.99'));
+ 22  END;
+ 23  /
+The basket contains 4 items, so the shipping cost is  $7.50                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- test using basket_id 12
+SQL> 
+SQL> DECLARE
+  2  lv_quantity bb_basket.quantity%TYPE;
+  3  lv_basket_id bb_basket.idbasket%TYPE := 12;
+  4  lv_shipping_cost NUMBER(4,2);
+  5  BEGIN
+  6  SELECT quantity
+  7   INTO lv_quantity
+  8   FROM bb_basket
+  9   WHERE idbasket = lv_basket_id;
+ 10      IF lv_quantity < 0 THEN
+ 11          lv_shipping_cost := 0;
+ 12      ELSIF lv_quantity <= 3 THEN
+ 13          lv_shipping_cost := 5.00;
+ 14      ELSIF lv_quantity >= 4 AND lv_quantity <= 6 THEN
+ 15          lv_shipping_cost := 7.50;
+ 16      ELSIF lv_quantity >= 7 AND lv_quantity <= 10 THEN
+ 17          lv_shipping_cost := 10.00;
+ 18      ELSE
+ 19          lv_shipping_cost := 12.00;
+ 20      END IF;
+ 21    DBMS_OUTPUT.PUT_LINE('The basket contains '||lv_quantity||' items, so the shipping cost is'||TO_CHAR(lv_shipping_cost,'$99.99'));
+ 22  END;
+ 23  /
+The basket contains 7 items, so the shipping cost is $10.00                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- 3-7: Using Scalar Variables for Data Retrieval
+SQL> 
+SQL> DECLARE
+  2  lv_idbasket bb_basket.idbasket%TYPE;
+  3  lv_subtotal bb_basket.subtotal%TYPE;
+  4  lv_shipping bb_basket.shipping%TYPE;
+  5  lv_tax bb_basket.tax%TYPE;
+  6  lv_total bb_basket.total%TYPE;
+  7  lv_basketid_choice bb_basket.idbasket%TYPE := 12;
+  8  BEGIN
+  9  SELECT idbasket, subtotal, shipping, tax, total
+ 10   INTO lv_idbasket, lv_subtotal, lv_shipping, lv_tax, lv_total
+ 11   FROM bb_basket
+ 12   WHERE idbasket = lv_basketid_choice;
+ 13  DBMS_OUTPUT.PUT_LINE('Basket id: '||lv_idbasket||', Subtotal: '||lv_subtotal||', Shipping: '||lv_shipping||', Tax: '||lv_tax||', Total: '||lv_total);
+ 14  END;
+ 15  /
+Basket id: 12, Subtotal: 72.4, Shipping: 8, Tax: 3.26, Total: 83.66                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- 3-8: Using a Record Variable for Data Retrieval
+SQL> 
+SQL> DECLARE
+  2  TYPE type_basket IS RECORD(
+  3   lv_idbasket bb_basket.idbasket%TYPE,
+  4   lv_subtotal bb_basket.subtotal%TYPE,
+  5   lv_shipping bb_basket.shipping%TYPE,
+  6   lv_tax bb_basket.tax%TYPE,
+  7   lv_total bb_basket.total%TYPE);
+  8  basket_row type_basket;
+  9  lv_basketid_choice bb_basket.idbasket%TYPE := 12;
+ 10  BEGIN
+ 11  SELECT idbasket, subtotal, shipping, tax, total
+ 12   INTO basket_row
+ 13   FROM bb_basket
+ 14   WHERE idbasket = lv_basketid_choice;
+ 15  DBMS_OUTPUT.PUT_LINE('Basket id: '||basket_row.lv_idbasket||', Subtotal: '||basket_row.lv_subtotal||', Shipping: '||basket_row.lv_shipping||', Tax: '||basket_row.lv_tax||', Total: '||basket_row.lv_total);
+ 16  END;
+ 17  /
+Basket id: 12, Subtotal: 72.4, Shipping: 8, Tax: 3.26, Total: 83.66                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> connect pledge/pledge@localhost:1521/XEPDB1;
+Connected.
+SQL> 
+SQL> SET SERVEROUTPUT ON SIZE UNLIMITED;
+SQL> 
+SQL> -- 3-9 Retreving Pledge Totals
+SQL> 
+SQL> DECLARE
+  2   TYPE type_pledge IS RECORD(
+  3    project_id dd_project.idproj%TYPE,
+  4    project_name dd_project.projname%TYPE,
+  5    number_pledges dd_pledge.idpledge%TYPE,
+  6    tot_amt_pledged dd_pledge.pledgeamt%TYPE,
+  7    avg_amt_pledged dd_pledge.pledgeamt%TYPE);
+  8    pledge_info type_pledge;
+  9    lv_proj_id_choice dd_project.idproj%TYPE := 501;
+ 10  BEGIN
+ 11   SELECT proj.idproj, proj.projname, COUNT(pl.idpledge) AS Number_of_Pledges, SUM(pl.pledgeamt) AS Total_Amount_Pledged, AVG(pl.pledgeamt) AS Average_Pledged
+ 12    INTO pledge_info
+ 13    FROM dd_project proj INNER JOIN dd_pledge pl
+ 14    ON proj.idproj = pl.idproj
+ 15    GROUP BY proj.idproj, proj.projname
+ 16    HAVING proj.idproj = lv_proj_id_choice;
+ 17    DBMS_OUTPUT.PUT_LINE('Project ID: '||pledge_info.project_id||', Project Name: '||pledge_info.project_name||
+ 18                         ', Number of Pledges: '||pledge_info.number_pledges||', Total Dollars Pledged: '
+ 19                         ||TO_CHAR(pledge_info.tot_amt_pledged,'$9999.99')||', Average Pledge Amount: '
+ 20                         ||TO_CHAR(pledge_info.avg_amt_pledged,'$999.99'));
+ 21  END;
+ 22  /
+Project ID: 501, Project Name: Community food pantry #21 freezer equipment, Number of Pledges: 5, Total Dollars Pledged:  $4060.00, Average Pledge Amount:  $812.00                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- 3-10 Adding a Project
+SQL> 
+SQL> CREATE SEQUENCE dd_projid_seq
+  2      INCREMENT BY 1
+  3      START WITH 530;
+
+Sequence created.
+
+SQL> 
+SQL> DECLARE
+  2   rec_project dd_project%ROWTYPE;
+  3  BEGIN
+  4   rec_project.idproj := dd_projid_seq.NEXTVAL;
+  5   rec_project.projname := 'HK Animal Shelter Extension';
+  6   rec_project.projstartdate := '01-JAN-13';
+  7   rec_project.projenddate := '31-MAY-13';
+  8   rec_project.projfundgoal := 65000;
+  9   INSERT INTO dd_project
+ 10      VALUES rec_project;
+ 11  END;
+ 12  /
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> --check new project entry
+SQL> 
+SQL> SELECT *
+  2   FROM dd_project
+  3   WHERE idproj = 530;
+
+    IDPROJ PROJNAME                                                     PROJSTART PROJENDDA PROJFUNDGOAL PROJCOORD                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+---------- ------------------------------------------------------------ --------- --------- ------------ --------------------                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+       530 HK Animal Shelter Extension                                  01-JAN-13 31-MAY-13        65000                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+
+SQL> 
+SQL> -- 3-11 Retrieving and Displaying Pledge Data
+SQL> 
+SQL> DECLARE
+  2   TYPE type_project IS TABLE OF dd_pledge%ROWTYPE
+  3   INDEX BY PLS_INTEGER;
+  4   tbl_pledge type_project;
+  5   lv_month_choice CHAR(2) := '01';
+  6   lv_payment_style VARCHAR2(25);
+  7  BEGIN
+  8   SELECT * BULK COLLECT INTO tbl_pledge
+  9    FROM dd_pledge
+ 10    WHERE TO_CHAR(pledgedate, 'MM') = lv_month_choice
+ 11    ORDER BY paymonths;
+ 12   FOR i IN 1..tbl_pledge.COUNT LOOP
+ 13      IF tbl_pledge(i).paymonths = 0 THEN
+ 14          lv_payment_style := 'Lump Sum';
+ 15      ELSE
+ 16          lv_payment_style := 'Monthly-'||tbl_pledge(i).paymonths;
+ 17      END IF;
+ 18      DBMS_OUTPUT.PUT_LINE('Pledge ID: '||tbl_pledge(i).idpledge||', Donor ID: '
+ 19                           ||tbl_pledge(i).iddonor||', Pledge Amount: '
+ 20                           ||TO_CHAR(tbl_pledge(i).pledgeamt, '$9999.99')||', Payment Style: '||lv_payment_style);
+ 21   END LOOP;
+ 22  END;
+ 23  /
+Pledge ID: 108, Donor ID: 308, Pledge Amount:   $480.00, Payment Style: Monthly-24                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- 3-12 Retrieving a Specific Pledge
+SQL> 
+SQL> DECLARE
+  2   TYPE type_pledge IS RECORD(
+  3    pledge_id dd_pledge.idpledge%TYPE,
+  4    donor_id dd_pledge.iddonor%TYPE,
+  5    pledge_amt dd_pledge.pledgeamt%TYPE,
+  6    payment dd_payment.payamt%TYPE,
+  7    diff dd_pledge.pledgeamt%TYPE);
+  8    pledge_info type_pledge;
+  9    lv_pledge_id_choice dd_pledge.idpledge%TYPE := 107;
+ 10  BEGIN
+ 11   SELECT pl.idpledge, pl.iddonor, pl.pledgeamt, SUM(pay.payamt) AS Payment_Total, (pl.pledgeamt - SUM(pay.payamt)) AS Balance
+ 12    INTO pledge_info
+ 13    FROM dd_pledge pl INNER JOIN dd_payment pay ON
+ 14    pl.idpledge = pay.idpledge
+ 15    GROUP BY pl.idpledge, pl.iddonor, pl.pledgeamt
+ 16    HAVING pl.idpledge = lv_pledge_id_choice;
+ 17   DBMS_OUTPUT.PUT_LINE('Pledge ID: '||pledge_info.pledge_id||', Donor ID: '
+ 18                        ||pledge_info.donor_id||', Pledge Amount: '||TO_CHAR(pledge_info.pledge_amt, '$9999.99')||
+ 19                        ', Payments: '||TO_CHAR(pledge_info.payment, '$9999.99')||', BALANCE: '||TO_CHAR(pledge_info.diff, '$9999.99'));
+ 20  END;
+ 21  /
+Pledge ID: 107, Donor ID: 302, Pledge Amount:  $1200.00, Payments:   $350.00, BALANCE:   $850.00                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+
+PL/SQL procedure successfully completed.
+
+SQL>   spool off

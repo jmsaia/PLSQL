@@ -1,0 +1,327 @@
+SQL> SET SERVEROUTPUT ON SIZE UNLIMITED;
+SQL> SET LINESIZE 700;
+SQL> 
+SQL> -- Lab 5
+SQL> 
+SQL> -- 5-9: Creating a Logon Procedure
+SQL> 
+SQL> connect brewbeans/brewbeans@localhost:1521/XEPDB1;
+Connected.
+SQL> 
+SQL> SET SERVEROUTPUT ON SIZE UNLIMITED;
+SQL> 
+SQL> --logon procedure
+SQL> 
+SQL> create or replace
+  2  PROCEDURE MEMBER_CK_SP
+  3   (p_id IN VARCHAR2,
+  4    p_pass_mem IN OUT VARCHAR2,
+  5    p_check OUT VARCHAR2)
+  6  AS
+  7   TYPE type_name IS RECORD(
+  8   first bb_shopper.firstname%TYPE,
+  9   last bb_shopper.lastname%TYPE);
+ 10   name_info type_name;
+ 11  BEGIN
+ 12    SELECT firstname, lastname
+ 13    INTO name_info
+ 14    FROM bb_shopper
+ 15    WHERE username = p_id AND password = p_pass_mem;
+ 16    p_pass_mem := name_info.first||' '||name_info.last;
+ 17  EXCEPTION
+ 18   WHEN NO_DATA_FOUND THEN
+ 19    p_pass_mem := NULL;
+ 20    p_check := 'INVALID';
+ 21  END MEMBER_CK_SP;
+ 22  /
+
+Procedure created.
+
+SQL> 
+SQL> -- script with username: rat55 password: kile, test
+SQL> 
+SQL> DECLARE
+  2   lv_username bb_shopper.username%TYPE := 'rat55';
+  3   lv_password VARCHAR2(30) := 'kile';
+  4   lv_check CHAR(7);
+  5  BEGIN
+  6   DBMS_OUTPUT.PUT_LINE('member ck proc called');
+  7   MEMBER_CK_SP(lv_username, lv_password, lv_check);
+  8   DBMS_OUTPUT.PUT_LINE(lv_password);
+  9   DBMS_OUTPUT.PUT_LINE(lv_check);
+ 10  END;
+ 11  /
+member ck proc called                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+Kenny Ratman                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- username: rat password: kile, test
+SQL> 
+SQL> DECLARE
+  2   lv_username bb_shopper.username%TYPE := 'rat';
+  3   lv_password VARCHAR2(30) := 'kile';
+  4   lv_check CHAR(7);
+  5  BEGIN
+  6   DBMS_OUTPUT.PUT_LINE('member ck proc called');
+  7   MEMBER_CK_SP(lv_username, lv_password, lv_check);
+  8   DBMS_OUTPUT.PUT_LINE(lv_password);
+  9   DBMS_OUTPUT.PUT_LINE(lv_check);
+ 10  END;
+ 11  /
+member ck proc called                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+INVALID                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- 5-10: Returning A Record
+SQL> 
+SQL> connect pledge/pledge@localhost:1521/XEPDB1;
+Connected.
+SQL> 
+SQL> SET SERVEROUTPUT ON SIZE UNLIMITED;
+SQL> 
+SQL> --Return Record Procedure
+SQL> 
+SQL> create or replace
+  2  PROCEDURE DDPROJ_SP
+  3   (p_id IN VARCHAR2,
+  4    p_data OUT VARCHAR2)
+  5  AS
+  6    rec_project dd_project%ROWTYPE;
+  7  BEGIN
+  8   SELECT *
+  9   INTO rec_project
+ 10   FROM dd_project
+ 11   WHERE idproj = p_id;
+ 12   p_data := 'Project ID: '||rec_project.idproj||', Project Name: '||rec_project.projname||', Project Start: '||rec_project.projstartdate||', Project End: '||rec_project.projenddate||', Project Fund Goal: '||rec_project.projfundgoal||', Project Coordinator: '||rec_project.projcoord;
+ 13  END DDPROJ_SP;
+ 14  /
+
+Procedure created.
+
+SQL> 
+SQL> -- project id lookup script
+SQL> 
+SQL> DECLARE
+  2   lv_proj_id dd_project.idproj%TYPE := 501;
+  3   lv_data VARCHAR2(400);
+  4  BEGIN
+  5   DBMS_OUTPUT.PUT_LINE('DDPROJ_SP called');
+  6   DDPROJ_SP(lv_proj_id, lv_data);
+  7   DBMS_OUTPUT.PUT_LINE(lv_data);
+  8  END;
+  9  /
+DDPROJ_SP called                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+Project ID: 501, Project Name: Community food pantry #21 freezer equipment, Project Start: 01-OCT-12, Project End: 31-DEC-12, Project Fund Goal: 65000, Project Coordinator: Shawn Hasee                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- 5-11: Creating a Procedure
+SQL> 
+SQL> -- Active pledge procedure
+SQL> 
+SQL> create or replace
+  2  PROCEDURE DDPAY_SP
+  3   (p_donor_id IN NUMBER,
+  4    p_bool OUT VARCHAR2)
+  5  AS
+  6    TYPE type_active IS RECORD(
+  7    iddonor dd_pledge.iddonor%TYPE,
+  8    paymonths dd_pledge.paymonths%TYPE,
+  9    statusdesc dd_status.statusdesc%TYPE);
+ 10    active_info type_active;
+ 11  BEGIN
+ 12   SELECT p.iddonor, p.paymonths, s.statusdesc
+ 13    INTO active_info
+ 14    FROM dd_pledge p INNER JOIN dd_status s
+ 15    ON p.idstatus = s.idstatus
+ 16    WHERE p.iddonor = p_donor_id AND s.statusdesc = 'Open' AND p.paymonths > 0;
+ 17    p_bool := 'TRUE';
+ 18  EXCEPTION
+ 19   WHEN NO_DATA_FOUND THEN
+ 20   p_bool := 'FALSE';
+ 21  END DDPAY_SP;
+ 22  /
+
+Procedure created.
+
+SQL> 
+SQL> -- TRUE script
+SQL> 
+SQL> DECLARE
+  2   lv_donor_id dd_pledge.iddonor%TYPE := 301;
+  3   lv_bool VARCHAR2(5);
+  4  BEGIN
+  5   DBMS_OUTPUT.PUT_LINE('DDPAY_SP called');
+  6   DDPAY_SP(lv_donor_id, lv_bool);
+  7   DBMS_OUTPUT.PUT_LINE(lv_bool);
+  8  END;
+  9  /
+DDPAY_SP called                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+TRUE                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- FALSE script
+SQL> DECLARE
+  2   lv_donor_id dd_pledge.iddonor%TYPE := 104;
+  3   lv_bool VARCHAR2(5);
+  4  BEGIN
+  5   DBMS_OUTPUT.PUT_LINE('DDPAY_SP called');
+  6   DDPAY_SP(lv_donor_id, lv_bool);
+  7   DBMS_OUTPUT.PUT_LINE(lv_bool);
+  8  END;
+  9  /
+DDPAY_SP called                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
+FALSE                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- 5-12: Creating a Procedure
+SQL> 
+SQL> CREATE OR REPLACE PROCEDURE ddckpay_sp
+  2   (p_pay_amt IN NUMBER,
+  3    p_pledge_id IN NUMBER,
+  4    p_corr OUT VARCHAR2,
+  5    p_no_data OUT VARCHAR2)
+  6  IS
+  7   lv_idpledge dd_pledge.idpledge%TYPE;
+  8   lv_install NUMBER(6);
+  9   lv_paymonths dd_pledge.paymonths%TYPE;
+ 10  BEGIN
+ 11   SELECT idpledge, pledgeamt/paymonths, paymonths
+ 12    INTO lv_idpledge, lv_install, lv_paymonths
+ 13    FROM dd_pledge
+ 14    WHERE idpledge = p_pledge_id AND lv_paymonths > 0;
+ 15   IF p_pay_amt <> lv_install THEN
+ 16    RAISE_APPLICATION_ERROR(-20050,'Incorrect payment amount - planned payment = '||lv_install);
+ 17   ELSE
+ 18    p_corr := 'Correct Payment Amount';
+ 19   END IF;
+ 20  EXCEPTION
+ 21   WHEN NO_DATA_FOUND THEN
+ 22     DBMS_OUTPUT.PUT_LINE('No payment information');
+ 23  END;
+ 24  /
+
+Procedure created.
+
+SQL> 
+SQL> -- id 104, $25 run
+SQL> 
+SQL> DECLARE
+  2   lv_pledge_id dd_pledge.idpledge%TYPE := 104;
+  3   lv_pledge_amt dd_pledge.pledgeamt%TYPE := 25;
+  4   lv_corr VARCHAR2(30);
+  5   lv_no_data VARCHAR2(30);
+  6  BEGIN
+  7   DBMS_OUTPUT.PUT_LINE('DDPCKBAL_SP called');
+  8   ddckpay_sp(lv_pledge_id, lv_pledge_amt, lv_corr, lv_no_data);
+  9   DBMS_OUTPUT.PUT_LINE(lv_corr);
+ 10   DBMS_OUTPUT.PUT_LINE(lv_no_data);
+ 11  END;
+ 12  /
+DDPCKBAL_SP called                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+No payment information                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- id 104, 20 run
+SQL> 
+SQL> DECLARE
+  2   lv_pledge_id dd_pledge.idpledge%TYPE := 104;
+  3   lv_pledge_amt dd_pledge.pledgeamt%TYPE := 20;
+  4   lv_corr VARCHAR2(30);
+  5   lv_no_data VARCHAR2(30);
+  6  BEGIN
+  7   DBMS_OUTPUT.PUT_LINE('DDPCKBAL_SP called');
+  8   ddckpay_sp(lv_pledge_id, lv_pledge_amt, lv_corr, lv_no_data);
+  9   DBMS_OUTPUT.PUT_LINE(lv_corr);
+ 10   DBMS_OUTPUT.PUT_LINE(lv_no_data);
+ 11  END;
+ 12  /
+DDPCKBAL_SP called                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+No payment information                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- id 104, 20 run
+SQL> 
+SQL> DECLARE
+  2   lv_pledge_id dd_pledge.idpledge%TYPE := 100;
+  3   lv_pledge_amt dd_pledge.pledgeamt%TYPE := 20;
+  4   lv_corr VARCHAR2(30);
+  5   lv_no_data VARCHAR2(30);
+  6  BEGIN
+  7   DBMS_OUTPUT.PUT_LINE('DDPCKBAL_SP called');
+  8   ddckpay_sp(lv_pledge_id, lv_pledge_amt, lv_corr, lv_no_data);
+  9   DBMS_OUTPUT.PUT_LINE(lv_corr);
+ 10   DBMS_OUTPUT.PUT_LINE(lv_no_data);
+ 11  END;
+ 12  /
+DDPCKBAL_SP called                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+No payment information                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- 5-13: Creating a Procedure
+SQL> 
+SQL> -- pledge payment procedure
+SQL> 
+SQL> create or replace
+  2  PROCEDURE DDCKBAL_SP(
+  3   p_pledge_id IN NUMBER,
+  4   p_pledge_amt OUT NUMBER,
+  5   p_pay_ttd OUT NUMBER,
+  6   p_re_bal OUT NUMBER)
+  7  AS
+  8   TYPE type_amt IS RECORD(
+  9   idpledge dd_pledge.idpledge%TYPE,
+ 10   pledgeamt dd_pledge.pledgeamt%TYPE,
+ 11   payamt dd_payment.payamt%TYPE,
+ 12   re_bal NUMBER(20));
+ 13   amt_info type_amt;
+ 14  BEGIN
+ 15   SELECT p.idpledge, p.pledgeamt, SUM(pa.payamt), p.pledgeamt-SUM(pa.payamt)
+ 16   INTO amt_info
+ 17   FROM dd_pledge p INNER JOIN dd_payment pa
+ 18   ON p.idpledge = pa.idpledge
+ 19   WHERE p.idpledge = p_pledge_id
+ 20   GROUP BY p.idpledge, p.pledgeamt;
+ 21   p_pledge_amt := amt_info.pledgeamt;
+ 22   p_pay_ttd := amt_info.payamt;
+ 23   p_re_bal := amt_info.re_bal;
+ 24  END DDCKBAL_SP;
+ 25  /
+
+Procedure created.
+
+SQL> 
+SQL> -- pledge script
+SQL> 
+SQL> DECLARE
+  2   lv_pledge_id dd_pledge.idpledge%TYPE := 104;
+  3   lv_pledge_amt dd_pledge.pledgeamt%TYPE;
+  4   lv_payamt dd_payment.payamt%TYPE;
+  5   lv_re_bal NUMBER(20);
+  6  BEGIN
+  7   DBMS_OUTPUT.PUT_LINE('DDPCKBAL_SP called');
+  8   DDPCKBAL_SP(lv_pledge_id, lv_pledge_amt, lv_payamt, lv_re_bal);
+  9   DBMS_OUTPUT.PUT_LINE('Pledge Amount: '||lv_pledge_amt||', Pay Total to Date: '||lv_payamt||', Remaining Balance: '||lv_re_bal);
+ 10  END;
+ 11  /
+DDPCKBAL_SP called                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+Pledge Amount: 240, Pay Total to Date: 140, Remaining Balance: 100                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+
+PL/SQL procedure successfully completed.
+
+SQL> spool off

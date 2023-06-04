@@ -1,0 +1,97 @@
+SQL> SET SERVEROUTPUT ON SIZE UNLIMITED;
+SQL> 
+SQL> --Case 1
+SQL> 
+SQL> /*The difference between scalar, record, and table variables is that a scalar variable
+SQL>  can only hold a single value while a record is a composite data type that allow multiple
+SQL>  values or fields to be contained in a single variable. A table (of records) is a type of collection,
+SQL>  and it's similar to a record, but it can handle more than one record of data.*/
+SQL> 
+SQL>  --Case 2
+SQL> 
+SQL>  /*display total number of times a specified movie, with conditional rating based
+SQL>  on COUNT(). Retrieve movie title, rental count, and rental rating. Add exception
+SQL>  handlers. Use 5 and 15*/
+SQL> 
+SQL> --5 run
+SQL> 
+SQL> DECLARE
+  2   TYPE type_rntl IS RECORD(
+  3    lv_mov_id mm_movie.movie_id%TYPE,
+  4    lv_mov_tle mm_movie.movie_title%TYPE,
+  5    lv_rntl_cnt NUMBER(2));
+  6   rntl_info type_rntl;
+  7   lv_mov_id_choice VARCHAR2(2) := 5;
+  8   lv_rntl_rt VARCHAR2(4);
+  9  BEGIN
+ 10   SELECT mov.movie_id, mov.movie_title, COUNT(rnt.movie_id)
+ 11    INTO rntl_info
+ 12    FROM mm_movie mov INNER JOIN mm_rental rnt
+ 13    ON mov.movie_id = rnt.movie_id
+ 14    GROUP BY mov.movie_title, mov.movie_id
+ 15    HAVING mov.movie_id = lv_mov_id_choice;
+ 16   IF rntl_info.lv_rntl_cnt > 0 AND rntl_info.lv_rntl_cnt < 5 THEN
+ 17    lv_rntl_rt := 'Dump';
+ 18   ELSIF rntl_info.lv_rntl_cnt >= 5 AND rntl_info.lv_rntl_cnt <= 20 THEN
+ 19    lv_rntl_rt := 'Low';
+ 20   ELSIF rntl_info.lv_rntl_cnt >= 21 AND rntl_info.lv_rntl_cnt <= 35 THEN
+ 21    lv_rntl_rt := 'Mid';
+ 22   ELSE
+ 23    lv_rntl_rt := 'High';
+ 24   END IF;
+ 25    DBMS_OUTPUT.PUT_LINE('Movie Title: '||rntl_info.lv_mov_tle||', Rental Count: '||rntl_info.lv_rntl_cnt||
+ 26                         ', Rental Rating: '||lv_rntl_rt);
+ 27  EXCEPTION
+ 28   WHEN NO_DATA_FOUND THEN
+ 29    DBMS_OUTPUT.PUT_LINE('A movie with that id does not exist!');
+ 30   WHEN OTHERS THEN
+ 31    DBMS_OUTPUT.PUT_LINE('A problem has occured retrieving the rental information.');
+ 32    DBMS_OUTPUT.PUT_LINE('Contact Tech Support');
+ 33  END;
+ 34  /
+Movie Title: Jaws, Rental Count: 1, Rental Rating: Dump                         
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> --15 run
+SQL> 
+SQL> DECLARE
+  2   TYPE type_rntl IS RECORD(
+  3    lv_mov_id mm_movie.movie_id%TYPE,
+  4    lv_mov_tle mm_movie.movie_title%TYPE,
+  5    lv_rntl_cnt NUMBER(2));
+  6   rntl_info type_rntl;
+  7   lv_mov_id_choice VARCHAR2(2) := 15;
+  8   lv_rntl_rt VARCHAR2(4);
+  9  BEGIN
+ 10   SELECT mov.movie_id, mov.movie_title, COUNT(rnt.movie_id)
+ 11    INTO rntl_info
+ 12    FROM mm_movie mov INNER JOIN mm_rental rnt
+ 13    ON mov.movie_id = rnt.movie_id
+ 14    GROUP BY mov.movie_title, mov.movie_id
+ 15    HAVING mov.movie_id = lv_mov_id_choice;
+ 16   IF rntl_info.lv_rntl_cnt > 0 AND rntl_info.lv_rntl_cnt < 5 THEN
+ 17    lv_rntl_rt := 'Dump';
+ 18   ELSIF rntl_info.lv_rntl_cnt >= 5 AND rntl_info.lv_rntl_cnt <= 20 THEN
+ 19    lv_rntl_rt := 'Low';
+ 20   ELSIF rntl_info.lv_rntl_cnt >= 21 AND rntl_info.lv_rntl_cnt <= 35 THEN
+ 21    lv_rntl_rt := 'Mid';
+ 22   ELSE
+ 23    lv_rntl_rt := 'High';
+ 24   END IF;
+ 25    DBMS_OUTPUT.PUT_LINE('Movie Title: '||rntl_info.lv_mov_tle||', Rental Count: '||rntl_info.lv_rntl_cnt||
+ 26                         ', Rental Rating: '||lv_rntl_rt);
+ 27  EXCEPTION
+ 28   WHEN NO_DATA_FOUND THEN
+ 29    DBMS_OUTPUT.PUT_LINE('A movie with that id does not exist!');
+ 30   WHEN OTHERS THEN
+ 31    DBMS_OUTPUT.PUT_LINE('A problem has occured retrieving the rental information.');
+ 32    DBMS_OUTPUT.PUT_LINE('Contact Tech Support');
+ 33  END;
+ 34  /
+A movie with that id does not exist!                                            
+
+PL/SQL procedure successfully completed.
+
+SQL> spool off

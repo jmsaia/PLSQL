@@ -1,0 +1,437 @@
+SQL> SET SERVEROUTPUT ON SIZE UNLIMITED;
+SQL> 
+SQL> --Assignment 4-9: Using an Explicit Cursor
+SQL> 
+SQL> DECLARE
+  2   CURSOR cur_payments IS
+  3    SELECT pa.idpay, p.idpledge, p.pledgeamt, p.paymonths, pa.paydate, pa.payamt
+  4    FROM dd_pledge p INNER JOIN dd_payment pa
+  5    ON p.idpledge = pa.idpledge
+  6    ORDER BY p.idpledge, pa.paydate;
+  7   TYPE type_payment IS RECORD
+  8    (pay_id dd_payment.idpay%TYPE,
+  9     pledge_id dd_pledge.idpledge%TYPE,
+ 10     pledge_amt dd_pledge.pledgeamt%TYPE,
+ 11     pay_months dd_pledge.paymonths%TYPE,
+ 12     pay_date dd_payment.paydate%TYPE,
+ 13     pay_amt dd_payment.payamt%TYPE);
+ 14    rec_payment type_payment;
+ 15   lv_pledge_id_holder dd_pledge.pledgeamt%TYPE := 100;
+ 16   lv_pay_output VARCHAR(13) := 'first payment';
+ 17  BEGIN
+ 18   OPEN cur_payments;
+ 19   LOOP
+ 20    FETCH cur_payments INTO rec_payment;
+ 21    EXIT WHEN cur_payments%NOTFOUND;
+ 22    IF rec_payment.pledge_id = lv_pledge_id_holder THEN
+ 23    lv_pay_output := 'first payment';
+ 24    lv_pledge_id_holder := lv_pledge_id_holder + 1;
+ 25    ELSE lv_pay_output := NULL;
+ 26    END IF;
+ 27    DBMS_OUTPUT.PUT_LINE('Payment ID: '||rec_payment.pay_id||', Pledge ID: '||rec_payment.pledge_id||', Pledge Amount: '||rec_payment.pledge_amt||
+ 28                        ', Number of Monthly Payments: '||rec_payment.pay_months||', Payment Date: '||rec_payment.pay_date||', Payment Amount: '||rec_payment.pay_amt||
+ 29                        ', '||lv_pay_output);
+ 30   END LOOP;
+ 31   CLOSE cur_payments;
+ 32  END;
+ 33  /
+Payment ID: 1425, Pledge ID: 100, Pledge Amount: 80, Number of Monthly Payments:
+0, Payment Date: 18-SEP-12, Payment Amount: 80, first payment                   
+Payment ID: 1426, Pledge ID: 101, Pledge Amount: 35, Number of Monthly Payments:
+0, Payment Date: 21-SEP-12, Payment Amount: 35, first payment                   
+Payment ID: 1427, Pledge ID: 102, Pledge Amount: 500, Number of Monthly         
+Payments: 0, Payment Date: 01-OCT-12, Payment Amount: 500, first payment        
+Payment ID: 1428, Pledge ID: 103, Pledge Amount: 2000, Number of Monthly        
+Payments: 0, Payment Date: 03-OCT-12, Payment Amount: 2000, first payment       
+Payment ID: 1430, Pledge ID: 104, Pledge Amount: 240, Number of Monthly         
+Payments: 12, Payment Date: 01-NOV-12, Payment Amount: 20, first payment        
+Payment ID: 1433, Pledge ID: 104, Pledge Amount: 240, Number of Monthly         
+Payments: 12, Payment Date: 01-DEC-12, Payment Amount: 20,                      
+Payment ID: 1436, Pledge ID: 104, Pledge Amount: 240, Number of Monthly         
+Payments: 12, Payment Date: 01-JAN-13, Payment Amount: 20,                      
+Payment ID: 1439, Pledge ID: 104, Pledge Amount: 240, Number of Monthly         
+Payments: 12, Payment Date: 01-FEB-13, Payment Amount: 20,                      
+Payment ID: 1444, Pledge ID: 104, Pledge Amount: 240, Number of Monthly         
+Payments: 12, Payment Date: 01-MAR-13, Payment Amount: 20,                      
+Payment ID: 1451, Pledge ID: 104, Pledge Amount: 240, Number of Monthly         
+Payments: 12, Payment Date: 01-APR-13, Payment Amount: 20,                      
+Payment ID: 1458, Pledge ID: 104, Pledge Amount: 240, Number of Monthly         
+Payments: 12, Payment Date: 01-MAY-13, Payment Amount: 20,                      
+Payment ID: 1431, Pledge ID: 105, Pledge Amount: 120, Number of Monthly         
+Payments: 12, Payment Date: 01-NOV-12, Payment Amount: 10, first payment        
+Payment ID: 1434, Pledge ID: 105, Pledge Amount: 120, Number of Monthly         
+Payments: 12, Payment Date: 01-DEC-12, Payment Amount: 10,                      
+Payment ID: 1437, Pledge ID: 105, Pledge Amount: 120, Number of Monthly         
+Payments: 12, Payment Date: 01-JAN-13, Payment Amount: 10,                      
+Payment ID: 1440, Pledge ID: 105, Pledge Amount: 120, Number of Monthly         
+Payments: 12, Payment Date: 01-FEB-13, Payment Amount: 10,                      
+Payment ID: 1445, Pledge ID: 105, Pledge Amount: 120, Number of Monthly         
+Payments: 12, Payment Date: 01-MAR-13, Payment Amount: 10,                      
+Payment ID: 1452, Pledge ID: 105, Pledge Amount: 120, Number of Monthly         
+Payments: 12, Payment Date: 01-APR-13, Payment Amount: 10,                      
+Payment ID: 1459, Pledge ID: 105, Pledge Amount: 120, Number of Monthly         
+Payments: 12, Payment Date: 01-MAY-13, Payment Amount: 10,                      
+Payment ID: 1429, Pledge ID: 106, Pledge Amount: 75, Number of Monthly Payments:
+0, Payment Date: 12-OCT-12, Payment Amount: 75, first payment                   
+Payment ID: 1432, Pledge ID: 107, Pledge Amount: 1200, Number of Monthly        
+Payments: 24, Payment Date: 01-NOV-12, Payment Amount: 50, first payment        
+Payment ID: 1435, Pledge ID: 107, Pledge Amount: 1200, Number of Monthly        
+Payments: 24, Payment Date: 01-DEC-12, Payment Amount: 50,                      
+Payment ID: 1438, Pledge ID: 107, Pledge Amount: 1200, Number of Monthly        
+Payments: 24, Payment Date: 01-JAN-13, Payment Amount: 50,                      
+Payment ID: 1441, Pledge ID: 107, Pledge Amount: 1200, Number of Monthly        
+Payments: 24, Payment Date: 01-FEB-13, Payment Amount: 50,                      
+Payment ID: 1446, Pledge ID: 107, Pledge Amount: 1200, Number of Monthly        
+Payments: 24, Payment Date: 01-MAR-13, Payment Amount: 50,                      
+Payment ID: 1453, Pledge ID: 107, Pledge Amount: 1200, Number of Monthly        
+Payments: 24, Payment Date: 01-APR-13, Payment Amount: 50,                      
+Payment ID: 1460, Pledge ID: 107, Pledge Amount: 1200, Number of Monthly        
+Payments: 24, Payment Date: 01-MAY-13, Payment Amount: 50,                      
+Payment ID: 1442, Pledge ID: 108, Pledge Amount: 480, Number of Monthly         
+Payments: 24, Payment Date: 01-FEB-13, Payment Amount: 20, first payment        
+Payment ID: 1447, Pledge ID: 108, Pledge Amount: 480, Number of Monthly         
+Payments: 24, Payment Date: 01-MAR-13, Payment Amount: 20,                      
+Payment ID: 1454, Pledge ID: 108, Pledge Amount: 480, Number of Monthly         
+Payments: 24, Payment Date: 01-APR-13, Payment Amount: 20,                      
+Payment ID: 1461, Pledge ID: 108, Pledge Amount: 480, Number of Monthly         
+Payments: 24, Payment Date: 01-MAY-13, Payment Amount: 20,                      
+Payment ID: 1443, Pledge ID: 109, Pledge Amount: 360, Number of Monthly         
+Payments: 12, Payment Date: 01-FEB-13, Payment Amount: 30, first payment        
+Payment ID: 1448, Pledge ID: 109, Pledge Amount: 360, Number of Monthly         
+Payments: 12, Payment Date: 01-MAR-13, Payment Amount: 30,                      
+Payment ID: 1455, Pledge ID: 109, Pledge Amount: 360, Number of Monthly         
+Payments: 12, Payment Date: 01-APR-13, Payment Amount: 30,                      
+Payment ID: 1462, Pledge ID: 109, Pledge Amount: 360, Number of Monthly         
+Payments: 12, Payment Date: 01-MAY-13, Payment Amount: 30,                      
+Payment ID: 1449, Pledge ID: 110, Pledge Amount: 300, Number of Monthly         
+Payments: 12, Payment Date: 01-MAR-13, Payment Amount: 25, first payment        
+Payment ID: 1456, Pledge ID: 110, Pledge Amount: 300, Number of Monthly         
+Payments: 12, Payment Date: 01-APR-13, Payment Amount: 25,                      
+Payment ID: 1463, Pledge ID: 110, Pledge Amount: 300, Number of Monthly         
+Payments: 12, Payment Date: 01-MAY-13, Payment Amount: 25,                      
+Payment ID: 1450, Pledge ID: 111, Pledge Amount: 1500, Number of Monthly        
+Payments: 0, Payment Date: 01-MAR-13, Payment Amount: 1500, first payment       
+Payment ID: 1457, Pledge ID: 112, Pledge Amount: 240, Number of Monthly         
+Payments: 12, Payment Date: 01-APR-13, Payment Amount: 20, first payment        
+Payment ID: 1464, Pledge ID: 112, Pledge Amount: 240, Number of Monthly         
+Payments: 12, Payment Date: 01-MAY-13, Payment Amount: 20,                      
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> --Assignment 4-10: Using a Different Form of Explicit Cursors
+SQL> 
+SQL> DECLARE
+  2   CURSOR cur_payments IS
+  3    SELECT pa.idpay, p.idpledge, p.pledgeamt, p.paymonths, pa.paydate, pa.payamt
+  4    FROM dd_pledge p INNER JOIN dd_payment pa
+  5    ON p.idpledge = pa.idpledge
+  6    ORDER BY p.idpledge, pa.paydate;
+  7   lv_pledge_id_holder dd_pledge.pledgeamt%TYPE := 100;
+  8   lv_pay_output VARCHAR(13) := 'first payment';
+  9  BEGIN
+ 10   FOR rec_payment IN cur_payments LOOP
+ 11    IF rec_payment.idpledge = lv_pledge_id_holder THEN
+ 12    lv_pay_output := 'first payment';
+ 13    lv_pledge_id_holder := lv_pledge_id_holder + 1;
+ 14    ELSE lv_pay_output := NULL;
+ 15    END IF;
+ 16    DBMS_OUTPUT.PUT_LINE('Payment ID: '||rec_payment.idpay||', Pledge ID: '||rec_payment.idpledge||', Pledge Amount: '||rec_payment.pledgeamt||
+ 17                        ', Number of Monthly Payments: '||rec_payment.paymonths||', Payment Date: '||rec_payment.paydate||', Payment Amount: '||rec_payment.payamt||
+ 18                        ', '||lv_pay_output);
+ 19   END LOOP;
+ 20  END;
+ 21  /
+Payment ID: 1425, Pledge ID: 100, Pledge Amount: 80, Number of Monthly Payments:
+0, Payment Date: 18-SEP-12, Payment Amount: 80, first payment                   
+Payment ID: 1426, Pledge ID: 101, Pledge Amount: 35, Number of Monthly Payments:
+0, Payment Date: 21-SEP-12, Payment Amount: 35, first payment                   
+Payment ID: 1427, Pledge ID: 102, Pledge Amount: 500, Number of Monthly         
+Payments: 0, Payment Date: 01-OCT-12, Payment Amount: 500, first payment        
+Payment ID: 1428, Pledge ID: 103, Pledge Amount: 2000, Number of Monthly        
+Payments: 0, Payment Date: 03-OCT-12, Payment Amount: 2000, first payment       
+Payment ID: 1430, Pledge ID: 104, Pledge Amount: 240, Number of Monthly         
+Payments: 12, Payment Date: 01-NOV-12, Payment Amount: 20, first payment        
+Payment ID: 1433, Pledge ID: 104, Pledge Amount: 240, Number of Monthly         
+Payments: 12, Payment Date: 01-DEC-12, Payment Amount: 20,                      
+Payment ID: 1436, Pledge ID: 104, Pledge Amount: 240, Number of Monthly         
+Payments: 12, Payment Date: 01-JAN-13, Payment Amount: 20,                      
+Payment ID: 1439, Pledge ID: 104, Pledge Amount: 240, Number of Monthly         
+Payments: 12, Payment Date: 01-FEB-13, Payment Amount: 20,                      
+Payment ID: 1444, Pledge ID: 104, Pledge Amount: 240, Number of Monthly         
+Payments: 12, Payment Date: 01-MAR-13, Payment Amount: 20,                      
+Payment ID: 1451, Pledge ID: 104, Pledge Amount: 240, Number of Monthly         
+Payments: 12, Payment Date: 01-APR-13, Payment Amount: 20,                      
+Payment ID: 1458, Pledge ID: 104, Pledge Amount: 240, Number of Monthly         
+Payments: 12, Payment Date: 01-MAY-13, Payment Amount: 20,                      
+Payment ID: 1431, Pledge ID: 105, Pledge Amount: 120, Number of Monthly         
+Payments: 12, Payment Date: 01-NOV-12, Payment Amount: 10, first payment        
+Payment ID: 1434, Pledge ID: 105, Pledge Amount: 120, Number of Monthly         
+Payments: 12, Payment Date: 01-DEC-12, Payment Amount: 10,                      
+Payment ID: 1437, Pledge ID: 105, Pledge Amount: 120, Number of Monthly         
+Payments: 12, Payment Date: 01-JAN-13, Payment Amount: 10,                      
+Payment ID: 1440, Pledge ID: 105, Pledge Amount: 120, Number of Monthly         
+Payments: 12, Payment Date: 01-FEB-13, Payment Amount: 10,                      
+Payment ID: 1445, Pledge ID: 105, Pledge Amount: 120, Number of Monthly         
+Payments: 12, Payment Date: 01-MAR-13, Payment Amount: 10,                      
+Payment ID: 1452, Pledge ID: 105, Pledge Amount: 120, Number of Monthly         
+Payments: 12, Payment Date: 01-APR-13, Payment Amount: 10,                      
+Payment ID: 1459, Pledge ID: 105, Pledge Amount: 120, Number of Monthly         
+Payments: 12, Payment Date: 01-MAY-13, Payment Amount: 10,                      
+Payment ID: 1429, Pledge ID: 106, Pledge Amount: 75, Number of Monthly Payments:
+0, Payment Date: 12-OCT-12, Payment Amount: 75, first payment                   
+Payment ID: 1432, Pledge ID: 107, Pledge Amount: 1200, Number of Monthly        
+Payments: 24, Payment Date: 01-NOV-12, Payment Amount: 50, first payment        
+Payment ID: 1435, Pledge ID: 107, Pledge Amount: 1200, Number of Monthly        
+Payments: 24, Payment Date: 01-DEC-12, Payment Amount: 50,                      
+Payment ID: 1438, Pledge ID: 107, Pledge Amount: 1200, Number of Monthly        
+Payments: 24, Payment Date: 01-JAN-13, Payment Amount: 50,                      
+Payment ID: 1441, Pledge ID: 107, Pledge Amount: 1200, Number of Monthly        
+Payments: 24, Payment Date: 01-FEB-13, Payment Amount: 50,                      
+Payment ID: 1446, Pledge ID: 107, Pledge Amount: 1200, Number of Monthly        
+Payments: 24, Payment Date: 01-MAR-13, Payment Amount: 50,                      
+Payment ID: 1453, Pledge ID: 107, Pledge Amount: 1200, Number of Monthly        
+Payments: 24, Payment Date: 01-APR-13, Payment Amount: 50,                      
+Payment ID: 1460, Pledge ID: 107, Pledge Amount: 1200, Number of Monthly        
+Payments: 24, Payment Date: 01-MAY-13, Payment Amount: 50,                      
+Payment ID: 1442, Pledge ID: 108, Pledge Amount: 480, Number of Monthly         
+Payments: 24, Payment Date: 01-FEB-13, Payment Amount: 20, first payment        
+Payment ID: 1447, Pledge ID: 108, Pledge Amount: 480, Number of Monthly         
+Payments: 24, Payment Date: 01-MAR-13, Payment Amount: 20,                      
+Payment ID: 1454, Pledge ID: 108, Pledge Amount: 480, Number of Monthly         
+Payments: 24, Payment Date: 01-APR-13, Payment Amount: 20,                      
+Payment ID: 1461, Pledge ID: 108, Pledge Amount: 480, Number of Monthly         
+Payments: 24, Payment Date: 01-MAY-13, Payment Amount: 20,                      
+Payment ID: 1443, Pledge ID: 109, Pledge Amount: 360, Number of Monthly         
+Payments: 12, Payment Date: 01-FEB-13, Payment Amount: 30, first payment        
+Payment ID: 1448, Pledge ID: 109, Pledge Amount: 360, Number of Monthly         
+Payments: 12, Payment Date: 01-MAR-13, Payment Amount: 30,                      
+Payment ID: 1455, Pledge ID: 109, Pledge Amount: 360, Number of Monthly         
+Payments: 12, Payment Date: 01-APR-13, Payment Amount: 30,                      
+Payment ID: 1462, Pledge ID: 109, Pledge Amount: 360, Number of Monthly         
+Payments: 12, Payment Date: 01-MAY-13, Payment Amount: 30,                      
+Payment ID: 1449, Pledge ID: 110, Pledge Amount: 300, Number of Monthly         
+Payments: 12, Payment Date: 01-MAR-13, Payment Amount: 25, first payment        
+Payment ID: 1456, Pledge ID: 110, Pledge Amount: 300, Number of Monthly         
+Payments: 12, Payment Date: 01-APR-13, Payment Amount: 25,                      
+Payment ID: 1463, Pledge ID: 110, Pledge Amount: 300, Number of Monthly         
+Payments: 12, Payment Date: 01-MAY-13, Payment Amount: 25,                      
+Payment ID: 1450, Pledge ID: 111, Pledge Amount: 1500, Number of Monthly        
+Payments: 0, Payment Date: 01-MAR-13, Payment Amount: 1500, first payment       
+Payment ID: 1457, Pledge ID: 112, Pledge Amount: 240, Number of Monthly         
+Payments: 12, Payment Date: 01-APR-13, Payment Amount: 20, first payment        
+Payment ID: 1464, Pledge ID: 112, Pledge Amount: 240, Number of Monthly         
+Payments: 12, Payment Date: 01-MAY-13, Payment Amount: 20,                      
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> --Adding Cursor Flexibility
+SQL> 
+SQL> -- I, and 250 run
+SQL> 
+SQL> DECLARE
+  2   CURSOR cur_donor (donor_type CHAR, pledge_gt NUMBER)IS
+  3    SELECT d.firstname, d.lastname, p.pledgeamt
+  4    FROM dd_donor d INNER JOIN dd_pledge p
+  5    ON d.iddonor = p.iddonor
+  6    WHERE d.typecode = donor_type AND p.pledgeamt > pledge_gt;
+  7   TYPE type_donor IS TABLE OF cur_donor%ROWTYPE
+  8    INDEX BY PLS_INTEGER;
+  9    tbl_donor type_donor;
+ 10   lv_donor_type CHAR(1) := 'I';
+ 11   lv_pledge_gt NUMBER(4):= 250;
+ 12  BEGIN
+ 13   OPEN cur_donor(lv_donor_type, lv_pledge_gt);
+ 14   FETCH cur_donor
+ 15    BULK COLLECT INTO tbl_donor;
+ 16   FOR i IN 1..tbl_donor.COUNT LOOP
+ 17    DBMS_OUTPUT. PUT_LINE('Donor name: '||tbl_donor(i).firstname||' '||tbl_donor(i).lastname||', Pledge Amount: '||tbl_donor(i).pledgeamt);
+ 18   END LOOP;
+ 19   CLOSE cur_donor;
+ 20  END;
+ 21  /
+Donor name: Mary Treanor, Pledge Amount: 360                                    
+Donor name: Patrick Lee, Pledge Amount: 1200                                    
+Donor name: Terry Venor, Pledge Amount: 300                                     
+Donor name: Betty Konklin, Pledge Amount: 480                                   
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- B, 500 run
+SQL> 
+SQL> DECLARE
+  2   CURSOR cur_donor (donor_type CHAR, pledge_gt NUMBER)IS
+  3    SELECT d.firstname, d.lastname, p.pledgeamt
+  4    FROM dd_donor d INNER JOIN dd_pledge p
+  5    ON d.iddonor = p.iddonor
+  6    WHERE d.typecode = donor_type AND p.pledgeamt > pledge_gt;
+  7   TYPE type_donor IS TABLE OF cur_donor%ROWTYPE
+  8    INDEX BY PLS_INTEGER;
+  9    tbl_donor type_donor;
+ 10   lv_donor_type CHAR(1) := 'B';
+ 11   lv_pledge_gt NUMBER(4):= 500;
+ 12  BEGIN
+ 13   OPEN cur_donor(lv_donor_type, lv_pledge_gt);
+ 14   FETCH cur_donor
+ 15    BULK COLLECT INTO tbl_donor;
+ 16   FOR i IN 1..tbl_donor.COUNT LOOP
+ 17    DBMS_OUTPUT. PUT_LINE('Donor name: '||tbl_donor(i).firstname||' '||tbl_donor(i).lastname||', Pledge Amount: '||tbl_donor(i).pledgeamt);
+ 18   END LOOP;
+ 19   CLOSE cur_donor;
+ 20  END;
+ 21  /
+Donor name:  Coastal Developers, Pledge Amount: 1500                            
+
+PL/SQL procedure successfully completed.
+
+SQL> --Using a Cursor Variable
+SQL> 
+SQL> single cursor, different query of pledge payment based on user input
+SP2-0734: unknown command beginning "single cur..." - rest of line ignored.
+SQL> input is donor id and indicator D,details, or S,summary data
+SQL> 
+SQL> DECLARE
+  2   cv_pledge SYS_REFCURSOR;
+  3    TYPE type_pledges IS RECORD(
+  4     pledge_id dd_payment.idpledge%TYPE,
+  5     pledge_pay dd_payment.payamt%TYPE);
+  6     rec_det type_pledges;
+  7   TYPE type_pledge IS RECORD(
+  8    pledge_id dd_payment.idpledge%TYPE,
+  9    pledge_sum dd_payment.payamt%TYPE);
+ 10    rec_sum type_pledge;
+ 11   lv_donor_id_input NUMBER(3) := '&input';
+ 12   lv_indicator_input CHAR(1) := '&input';
+ 13  BEGIN
+ 14   IF lv_indicator_input = 'D' THEN
+ 15    OPEN cv_pledge FOR SELECT p.idpledge, p.payamt
+ 16                       FROM dd_payment p INNER JOIN dd_pledge pl
+ 17                       ON p.idpledge = pl.idpledge
+ 18                       WHERE pl.iddonor = lv_donor_id_input;
+ 19    LOOP
+ 20     FETCH cv_pledge INTO rec_det;
+ 21     EXIT WHEN cv_pledge%NOTFOUND;
+ 22     DBMS_OUTPUT.PUT_LINE('Pledge ID: '||rec_det.pledge_id||', Pledge Payment: '||rec_det.pledge_pay);
+ 23    END LOOP;
+ 24   ELSIF lv_indicator_input = 'S' THEN
+ 25    OPEN cv_pledge FOR SELECT p.idpledge, SUM(p.payamt)
+ 26                   FROM dd_payment p INNER JOIN dd_pledge pl
+ 27                   ON p.idpledge = pl.idpledge
+ 28                   WHERE pl.iddonor = lv_donor_id_input
+ 29                   GROUP BY p.idpledge
+ 30                   ORDER BY p.idpledge;
+ 31    LOOP
+ 32     FETCH cv_pledge INTO rec_sum;
+ 33     EXIT WHEN cv_pledge%NOTFOUND;
+ 34     DBMS_OUTPUT.PUT_LINE('Pledge ID: '||rec_sum.pledge_id||', Pledge Payment Summary: '||rec_sum.pledge_sum);
+ 35    END LOOP;
+ 36   ELSE DBMS_OUTPUT.PUT_LINE('Error!, SELECT either D for details or S for summary');
+ 37   END IF;
+ 38  END;
+ 39  /
+Enter value for input: 308
+old  11:  lv_donor_id_input NUMBER(3) := '&input';
+new  11:  lv_donor_id_input NUMBER(3) := '308';
+Enter value for input: D
+old  12:  lv_indicator_input CHAR(1) := '&input';
+new  12:  lv_indicator_input CHAR(1) := 'D';
+Pledge ID: 104, Pledge Payment: 20                                              
+Pledge ID: 104, Pledge Payment: 20                                              
+Pledge ID: 104, Pledge Payment: 20                                              
+Pledge ID: 104, Pledge Payment: 20                                              
+Pledge ID: 104, Pledge Payment: 20                                              
+Pledge ID: 104, Pledge Payment: 20                                              
+Pledge ID: 104, Pledge Payment: 20                                              
+Pledge ID: 108, Pledge Payment: 20                                              
+Pledge ID: 108, Pledge Payment: 20                                              
+Pledge ID: 108, Pledge Payment: 20                                              
+Pledge ID: 108, Pledge Payment: 20                                              
+
+PL/SQL procedure successfully completed.
+
+SQL> DECLARE
+  2   cv_pledge SYS_REFCURSOR;
+  3    TYPE type_pledges IS RECORD(
+  4     pledge_id dd_payment.idpledge%TYPE,
+  5     pledge_pay dd_payment.payamt%TYPE);
+  6     rec_det type_pledges;
+  7   TYPE type_pledge IS RECORD(
+  8    pledge_id dd_payment.idpledge%TYPE,
+  9    pledge_sum dd_payment.payamt%TYPE);
+ 10    rec_sum type_pledge;
+ 11   lv_donor_id_input NUMBER(3) := '&input';
+ 12   lv_indicator_input CHAR(1) := '&input';
+ 13  BEGIN
+ 14   IF lv_indicator_input = 'D' THEN
+ 15    OPEN cv_pledge FOR SELECT p.idpledge, p.payamt
+ 16                       FROM dd_payment p INNER JOIN dd_pledge pl
+ 17                       ON p.idpledge = pl.idpledge
+ 18                       WHERE pl.iddonor = lv_donor_id_input;
+ 19    LOOP
+ 20     FETCH cv_pledge INTO rec_det;
+ 21     EXIT WHEN cv_pledge%NOTFOUND;
+ 22     DBMS_OUTPUT.PUT_LINE('Pledge ID: '||rec_det.pledge_id||', Pledge Payment: '||rec_det.pledge_pay);
+ 23    END LOOP;
+ 24   ELSIF lv_indicator_input = 'S' THEN
+ 25    OPEN cv_pledge FOR SELECT p.idpledge, SUM(p.payamt)
+ 26                   FROM dd_payment p INNER JOIN dd_pledge pl
+ 27                   ON p.idpledge = pl.idpledge
+ 28                   WHERE pl.iddonor = lv_donor_id_input
+ 29                   GROUP BY p.idpledge
+ 30                   ORDER BY p.idpledge;
+ 31    LOOP
+ 32     FETCH cv_pledge INTO rec_sum;
+ 33     EXIT WHEN cv_pledge%NOTFOUND;
+ 34     DBMS_OUTPUT.PUT_LINE('Pledge ID: '||rec_sum.pledge_id||', Pledge Payment Summary: '||rec_sum.pledge_sum);
+ 35    END LOOP;
+ 36   ELSE DBMS_OUTPUT.PUT_LINE('Error!, SELECT either D for details or S for summary');
+ 37   END IF;
+ 38  END;
+ 39  /
+Enter value for input: 308
+old  11:  lv_donor_id_input NUMBER(3) := '&input';
+new  11:  lv_donor_id_input NUMBER(3) := '308';
+Enter value for input: S
+old  12:  lv_indicator_input CHAR(1) := '&input';
+new  12:  lv_indicator_input CHAR(1) := 'S';
+Pledge ID: 104, Pledge Payment Summary: 140                                     
+Pledge ID: 108, Pledge Payment Summary: 80                                      
+
+PL/SQL procedure successfully completed.
+
+SQL> --Exception Handling
+SQL> 
+SQL> allow admin to change the ID assigned to a donor in dd_donor table
+SP2-0734: unknown command beginning "allow admi..." - rest of line ignored.
+SQL> exception by error raised by attempting a duplicate donor id.
+SP2-0734: unknown command beginning "exception ..." - rest of line ignored.
+SQL> Display This ID is already assigned."
+SP2-0734: unknown command beginning "Display Th..." - rest of line ignored.
+SQL> 
+SQL> -ID to 305
+SP2-0042: unknown command "-ID to 305" - rest of line ignored.
+SP2-0044: For a list of known commands enter HELP
+and to leave enter EXIT.
+SQL> 
+SQL> DECLARE
+  2   lv_change_id dd_donor.iddonor%TYPE := '&input';
+  3   lv_donor_id dd_donor.iddonor%TYPE := 305;
+  4  BEGIN
+  5   UPDATE dd_donor
+  6   SET iddonor = lv_change_id
+  7   WHERE iddonor = lv_donor_id;
+  8  EXCEPTION
+  9   WHEN dup_val_on_index THEN
+ 10    DBMS_OUTPUT.PUT_LINE('This ID is already assigned');
+ 11  END;
+ 12  /
+Enter value for input: 306
+old   2:  lv_change_id dd_donor.iddonor%TYPE := '&input';
+new   2:  lv_change_id dd_donor.iddonor%TYPE := '306';
+This ID is already assigned                                                     
+
+PL/SQL procedure successfully completed.
+
+SQL> spool off

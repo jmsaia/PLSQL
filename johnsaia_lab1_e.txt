@@ -1,0 +1,451 @@
+SQL> SELECT table_name
+  2  FROM user_tables;
+
+TABLE_NAME                                                                      
+--------------------------------------------------------------------------------
+STATE_LOOKUP                                                                    
+DEPT                                                                            
+EMP                                                                             
+SALGRADE                                                                        
+CUSTOMER                                                                        
+WIDGETS                                                                         
+PURCHASE_ORDER                                                                  
+EMP_SERVICE                                                                     
+EMP_SERVICE_LOG                                                                 
+
+9 rows selected.
+
+SQL> 
+SQL> SELECT table_name
+  2  FROM all_tables;
+
+TABLE_NAME                                                                      
+--------------------------------------------------------------------------------
+DUAL                                                                            
+SYSTEM_PRIVILEGE_MAP                                                            
+TABLE_PRIVILEGE_MAP                                                             
+USER_PRIVILEGE_MAP                                                              
+STMT_AUDIT_OPTION_MAP                                                           
+FINALHIST$                                                                      
+MODELGTTRAW$                                                                    
+AV_DUAL                                                                         
+AUDIT_ACTIONS                                                                   
+ALL_UNIFIED_AUDIT_ACTIONS                                                       
+WRI$_ADV_ASA_RECO_DATA                                                          
+
+TABLE_NAME                                                                      
+--------------------------------------------------------------------------------
+WRI$_HEATMAP_TOPN_DEP1                                                          
+WRI$_HEATMAP_TOPN_DEP2                                                          
+PLAN_TABLE$                                                                     
+KU$_LIST_FILTER_TEMP                                                            
+KU$_LIST_FILTER_TEMP_2                                                          
+OL$                                                                             
+DATA_PUMP_XPL_TABLE$                                                            
+OL$HINTS                                                                        
+OL$NODES                                                                        
+KU$NOEXP_TAB                                                                    
+KU$_SHARD_DOMIDX_NAMEMAP                                                        
+
+TABLE_NAME                                                                      
+--------------------------------------------------------------------------------
+KU$XKTFBUE                                                                      
+WRR$_REPLAY_CALL_FILTER                                                         
+ODCI_SECOBJ$                                                                    
+ODCI_WARNINGS$                                                                  
+ODCI_PMO_ROWIDS$                                                                
+XS$VALIDATION_TABLE                                                             
+SCHEDULER_FILEWATCHER_QT                                                        
+IMPDP_STATS                                                                     
+KU$_DATAPUMP_MASTER_12_2                                                        
+KU$_DATAPUMP_MASTER_12_0                                                        
+KU$_DATAPUMP_MASTER_11_2                                                        
+
+TABLE_NAME                                                                      
+--------------------------------------------------------------------------------
+KU$_DATAPUMP_MASTER_11_1_0_7                                                    
+KU$_DATAPUMP_MASTER_11_1                                                        
+KU$_DATAPUMP_MASTER_10_1                                                        
+SPD_SCRATCH_TAB                                                                 
+XDB$IMPORT_TT_INFO                                                              
+XDB$IMPORT_QN_INFO                                                              
+XDB$IMPORT_NM_INFO                                                              
+XDB$IMPORT_PT_INFO                                                              
+XDB$XIDX_IMP_T                                                                  
+XDB_INDEX_DDL_CACHE                                                             
+HELP                                                                            
+
+TABLE_NAME                                                                      
+--------------------------------------------------------------------------------
+DR$OBJECT_ATTRIBUTE                                                             
+DR$POLICY_TAB                                                                   
+DR$THS                                                                          
+DR$THS_PHRASE                                                                   
+DR$NUMBER_SEQUENCE                                                              
+AW$EXPRESS                                                                      
+AW$AWMD                                                                         
+AW$AWCREATE                                                                     
+AW$AWCREATE10G                                                                  
+AW$AWXML                                                                        
+AW$AWREPORT                                                                     
+
+TABLE_NAME                                                                      
+--------------------------------------------------------------------------------
+SAM_SPARSITY_ADVICE                                                             
+SDO_TIN_PC_SEQ                                                                  
+SDO_TIN_PC_SYSDATA_TABLE                                                        
+SDO_CS_CONTEXT_INFORMATION                                                      
+SRSNAMESPACE_TABLE                                                              
+SDO_UNITS_OF_MEASURE                                                            
+SDO_PRIME_MERIDIANS                                                             
+SDO_ELLIPSOIDS                                                                  
+SDO_DATUMS                                                                      
+SDO_COORD_SYS                                                                   
+SDO_COORD_AXIS_NAMES                                                            
+
+TABLE_NAME                                                                      
+--------------------------------------------------------------------------------
+SDO_COORD_AXES                                                                  
+SDO_COORD_REF_SYS                                                               
+SDO_COORD_OP_METHODS                                                            
+SDO_COORD_OPS                                                                   
+SDO_PREFERRED_OPS_SYSTEM                                                        
+SDO_PREFERRED_OPS_USER                                                          
+SDO_COORD_OP_PATHS                                                              
+SDO_COORD_OP_PARAMS                                                             
+SDO_COORD_OP_PARAM_USE                                                          
+SDO_COORD_OP_PARAM_VALS                                                         
+SDO_CS_SRS                                                                      
+
+TABLE_NAME                                                                      
+--------------------------------------------------------------------------------
+NTV2_XML_DATA                                                                   
+SDO_SRIDS_BY_URN                                                                
+SDO_SRIDS_BY_URN_PATTERN                                                        
+SDO_CRS_GEOGRAPHIC_PLUS_HEIGHT                                                  
+SDO_PROJECTIONS_OLD_SNAPSHOT                                                    
+SDO_ELLIPSOIDS_OLD_SNAPSHOT                                                     
+SDO_DATUMS_OLD_SNAPSHOT                                                         
+SDO_ST_TOLERANCE                                                                
+SDO_TTS_METADATA_TABLE                                                          
+SDO_INDEX_HISTOGRAM_TABLE                                                       
+SDO_TXN_JOURNAL_GTT                                                             
+
+TABLE_NAME                                                                      
+--------------------------------------------------------------------------------
+SDO_TXN_JOURNAL_REG                                                             
+SDO_DIST_METADATA_TABLE                                                         
+SDO_TXN_IDX_EXP_UPD_RGN                                                         
+SDO_TOPO_TRANSACT_DATA                                                          
+SDO_TOPO_RELATION_DATA                                                          
+SDO_TOPO_DATA$                                                                  
+OGIS_SPATIAL_REFERENCE_SYSTEMS                                                  
+OGIS_GEOMETRY_COLUMNS                                                           
+SDO_XML_SCHEMAS                                                                 
+SDO_FEATURE_USAGE                                                               
+SDO_WFS_LOCAL_TXNS                                                              
+
+TABLE_NAME                                                                      
+--------------------------------------------------------------------------------
+SDO_WS_CONFERENCE                                                               
+SDO_WS_CONFERENCE_RESULTS                                                       
+SDO_WS_CONFERENCE_PARTICIPANTS                                                  
+SDO_XSD_TABLE                                                                   
+SDO_GEOR_XMLSCHEMA_TABLE                                                        
+SDO_GEOR_DDL__TABLE$$                                                           
+SDO_GR_MOSAIC_0                                                                 
+SDO_GR_MOSAIC_1                                                                 
+SDO_GR_MOSAIC_2                                                                 
+SDO_GR_MOSAIC_3                                                                 
+SDO_GR_MOSAIC_CB                                                                
+
+TABLE_NAME                                                                      
+--------------------------------------------------------------------------------
+SDO_GR_PARALLEL                                                                 
+SDO_GR_RDT_1                                                                    
+SDO_GEOR_PLUGIN_REGISTRY                                                        
+RDF_PARAMETER                                                                   
+STATE_LOOKUP                                                                    
+DEPT                                                                            
+EMP                                                                             
+SALGRADE                                                                        
+CUSTOMER                                                                        
+WIDGETS                                                                         
+PURCHASE_ORDER                                                                  
+
+TABLE_NAME                                                                      
+--------------------------------------------------------------------------------
+EMP_SERVICE                                                                     
+EMP_SERVICE_LOG                                                                 
+
+123 rows selected.
+
+SQL> 
+SQL> DESC state_lookup;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ STATE                                     NOT NULL VARCHAR2(2)
+ STATE_DESC                                         VARCHAR2(16)
+
+SQL> 
+SQL> DESC dept;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DEPTNO                                    NOT NULL NUMBER(3)
+ DNAME                                              VARCHAR2(15)
+ LOC                                                VARCHAR2(10)
+
+SQL> 
+SQL> DESC emp;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                     NOT NULL NUMBER(4)
+ ENAME                                     NOT NULL VARCHAR2(10)
+ JOB                                                VARCHAR2(10)
+ MGR                                                NUMBER(4)
+ HIREDATE                                           DATE
+ SAL                                                NUMBER(6)
+ COMM                                               NUMBER(6)
+ DEPTNO                                             NUMBER(3)
+
+SQL> 
+SQL> DESC salgrade;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ GRADE                                     NOT NULL NUMBER(3)
+ LOSAL                                              NUMBER(5)
+ HISAL                                              NUMBER(6)
+
+SQL> 
+SQL> DESC customer;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUST_ID                                   NOT NULL NUMBER(5)
+ CUST_NAME                                          VARCHAR2(15)
+ ACCOUNT_ID                                         VARCHAR2(10)
+ ACCOUNT_TYPE                                       VARCHAR2(2)
+ STATE                                              VARCHAR2(2)
+
+SQL> 
+SQL> DESC widgets;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ WIDGET_ID                                 NOT NULL NUMBER(5)
+ STATUS                                             VARCHAR2(3)
+ SAMPLE                                             VARCHAR2(3)
+ LENGTH                                             NUMBER(5)
+ WIDTH                                              NUMBER(5)
+ HEIGHT                                             NUMBER(5)
+
+SQL> 
+SQL> DESC purchase_order;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ ORDER_ID                                           NUMBER(5)
+ WIDGET_ID                                          NUMBER(5)
+ CUST_ID                                            NUMBER(5)
+ QUANTITY                                           NUMBER(5)
+ PURCHASE_DATE                                      DATE
+ PURCHASE_PRICE                                     NUMBER(5)
+ DEV                                                VARCHAR2(1)
+
+SQL> 
+SQL> DESC emp_service;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              NUMBER(5)
+ CUST_ID                                            NUMBER(5)
+ SALES                                              NUMBER(5)
+
+SQL> 
+SQL> DESC emp_service_log;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPNO                                              NUMBER(5)
+ CUST_ID                                            NUMBER(5)
+ LOG                                                VARCHAR2(40)
+
+SQL> 
+SQL> SELECT *
+  2  FROM state_lookup;
+
+ST STATE_DESC                                                                   
+-- ----------------                                                             
+NJ New Jersey                                                                   
+MD Maryland                                                                     
+NY New York                                                                     
+HA Hawaii                                                                       
+AK Alaska                                                                       
+
+SQL> 
+SQL> SELECT *
+  2  FROM dept;
+
+    DEPTNO DNAME           LOC                                                  
+---------- --------------- ----------                                           
+        10 ACCOUNTING      NEW YORK                                             
+        20 RESEARCH        AUSTIN                                               
+        30 SALES           CHICAGO                                              
+        40 OPERATIONS      BOSTON                                               
+
+SQL> 
+SQL> SELECT *
+  2  FROM emp;
+
+     EMPNO ENAME      JOB               MGR HIREDATE         SAL       COMM     
+---------- ---------- ---------- ---------- --------- ---------- ----------     
+    DEPTNO                                                                      
+----------                                                                      
+      7839 KING       PRESIDENT             17-NOV-95       5000                
+        10                                                                      
+                                                                                
+      7566 JONES      MANAGER          7839 02-APR-95       2975                
+        20                                                                      
+                                                                                
+      7698 BLAKE      MANAGER          7839 01-MAY-95       2850                
+        30                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB               MGR HIREDATE         SAL       COMM     
+---------- ---------- ---------- ---------- --------- ---------- ----------     
+    DEPTNO                                                                      
+----------                                                                      
+      7782 CLARKS     MANAGER          7839 09-JUN-95       2450                
+        10                                                                      
+                                                                                
+      7902 FORD       ANALYST          7566 03-DEC-95       3000                
+        20                                                                      
+                                                                                
+      7369 SMITH      CLERK            7902 17-DEC-98        800                
+        20                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB               MGR HIREDATE         SAL       COMM     
+---------- ---------- ---------- ---------- --------- ---------- ----------     
+    DEPTNO                                                                      
+----------                                                                      
+      7499 ALLEN      SALESMAN         7698 20-FEB-99       1600        300     
+        30                                                                      
+                                                                                
+      7521 WARD       SALESMAN         7698 22-FEB-98       1250        500     
+        30                                                                      
+                                                                                
+      7654 MARTIN     SALESMAN         7698 28-SEP-99       1250       1400     
+        30                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB               MGR HIREDATE         SAL       COMM     
+---------- ---------- ---------- ---------- --------- ---------- ----------     
+    DEPTNO                                                                      
+----------                                                                      
+      7788 SCOTTS     ANALYST          7566 09-DEC-96       3000                
+        20                                                                      
+                                                                                
+      7844 TURNER     SALESMAN         7698 08-SEP-95       1500          0     
+        30                                                                      
+                                                                                
+      7876 ADAM       CLERK            7788 12-JAN-00       1100                
+        20                                                                      
+                                                                                
+
+     EMPNO ENAME      JOB               MGR HIREDATE         SAL       COMM     
+---------- ---------- ---------- ---------- --------- ---------- ----------     
+    DEPTNO                                                                      
+----------                                                                      
+      7900 JAMES      CLERK            7698 03-DEC-95        950                
+        30                                                                      
+                                                                                
+      7934 MARTIN     CLERK            7782 23-JAN-96       1300                
+        10                                                                      
+                                                                                
+
+14 rows selected.
+
+SQL> 
+SQL> SELECT *
+  2  FROM salgrade;
+
+     GRADE      LOSAL      HISAL                                                
+---------- ---------- ----------                                                
+         1        700       1200                                                
+         2       1201       1400                                                
+         3       1401       2000                                                
+         4       2001       3000                                                
+         5       3001       9999                                                
+
+SQL> 
+SQL> SELECT *
+  2  FROM customer;
+
+   CUST_ID CUST_NAME       ACCOUNT_ID AC ST                                     
+---------- --------------- ---------- -- --                                     
+     90001 B and B         A-11101    PR AK                                     
+     90002 XYZ             A-11102    CM NJ                                     
+     90003 JJ Sons         A-11103    CM NJ                                     
+     90004 Exxon           A-11104    PR NY                                     
+     90005 ABC             A-11105    CM NY                                     
+     90006 Smith Co.       A-11106    CM MD                                     
+     90007 Brown Co.       A-11107    CM MD                                     
+     90008 Cooper Inc.     A-11108    PR MD                                     
+
+8 rows selected.
+
+SQL> 
+SQL> SELECT *
+  2  FROM widgets;
+
+ WIDGET_ID STA SAM     LENGTH      WIDTH     HEIGHT                             
+---------- --- --- ---------- ---------- ----------                             
+        61 off yes         15         20         20                             
+        62 on  yes         17         21         21                             
+        63 off yes         16         20         20                             
+        64 off yes         14         20         20                             
+        65 off yes         17         20         21                             
+
+SQL> 
+SQL> SELECT *
+  2  FROM purchase_order;
+
+  ORDER_ID  WIDGET_ID    CUST_ID   QUANTITY PURCHASE_ PURCHASE_PRICE D          
+---------- ---------- ---------- ---------- --------- -------------- -          
+        31         61      90001         10 21-JAN-00            100 N          
+        32         63      90004         10 11-FEB-98            100 N          
+        33         64      90008          8 20-MAR-99             80 N          
+        34         65      90007          7 10-JUN-99             90 N          
+        35         62      90004         12 25-JUN-98             75 Y          
+        36         65      90001          9 05-JAN-00             90 Y          
+        37         61      90005          8 15-JUL-99            100 N          
+        38         63      90001          5 22-JUL-98            100 Y          
+        39         62      90005          7 01-AUG-98             75 N          
+        40         64      90008         10 20-AUG-99             80 Y          
+
+10 rows selected.
+
+SQL> 
+SQL> SELECT *
+  2  FROM emp_service;
+
+     EMPNO    CUST_ID      SALES                                                
+---------- ---------- ----------                                                
+      7521      90001        100                                                
+      7522      90006        100                                                
+      7698      90004        100                                                
+      7369      90002        100                                                
+      7788      90003        300                                                
+      7789      90005        300                                                
+      7902      90007        300                                                
+      7903      90008       5001                                                
+
+8 rows selected.
+
+SQL> 
+SQL> SELECT *
+  2  FROM emp_service_log;
+
+     EMPNO    CUST_ID LOG                                                       
+---------- ---------- ----------------------------------------                  
+      7521      90001 pur order sent                                            
+      7521      90006 waiting on invoice                                        
+      7698      90004 waiting parts                                             
+
+SQL> spool off

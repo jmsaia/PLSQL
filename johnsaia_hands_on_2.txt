@@ -1,0 +1,625 @@
+SQL> --Hands-On Assignment 2
+SQL> 
+SQL> 
+SQL> --2-1: Using Scalar Variables
+SQL> 
+SQL> DECLARE
+  2      lv_test_date DATE := '10-DEC-2012';
+  3      lv_test_num CONSTANT NUMBER(3) := 10;
+  4      lv_test_txt VARCHAR2(10);
+  5  BEGIN
+  6      lv_test_txt := 'Saia';
+  7      DBMS_OUTPUT.PUT_LINE(lv_test_date);
+  8      DBMS_OUTPUT.PUT_LINE(lv_test_num);
+  9      DBMS_OUTPUT.PUT_LINE(lv_test_txt);
+ 10  END;
+ 11  /
+10-DEC-12                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+10                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+Saia                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> 
+SQL> --2-3: Using IF Statements
+SQL> 
+SQL> --high result
+SQL> 
+SQL> DECLARE
+  2      lv_total_purchase_amt NUMBER(8,2) := 250;
+  3      lv_rating VARCHAR2(4);
+  4  BEGIN
+  5      IF lv_total_purchase_amt > 200 THEN
+  6         lv_rating := 'high';
+  7      ELSIF lv_total_purchase_amt > 100 THEN
+  8         lv_rating := 'med';
+  9      ELSE
+ 10         lv_rating := 'low';
+ 11      END IF;
+ 12      DBMS_OUTPUT.PUT_LINE(lv_rating);
+ 13  END;
+ 14  /
+high                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> --med result
+SQL> 
+SQL> DECLARE
+  2      lv_total_purchase_amt NUMBER(8,2) := 190;
+  3      lv_rating VARCHAR2(4);
+  4  BEGIN
+  5      IF lv_total_purchase_amt > 200 THEN
+  6         lv_rating := 'high';
+  7      ELSIF lv_total_purchase_amt > 100 THEN
+  8         lv_rating := 'med';
+  9      ELSE
+ 10         lv_rating := 'low';
+ 11      END IF;
+ 12      DBMS_OUTPUT.PUT_LINE(lv_rating);
+ 13  END;
+ 14  /
+med                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> --low result
+SQL> 
+SQL> DECLARE
+  2      lv_total_purchase_amt NUMBER(8,2) := 99;
+  3      lv_rating VARCHAR2(4);
+  4  BEGIN
+  5      IF lv_total_purchase_amt > 200 THEN
+  6         lv_rating := 'high';
+  7      ELSIF lv_total_purchase_amt > 100 THEN
+  8         lv_rating := 'med';
+  9      ELSE
+ 10         lv_rating := 'low';
+ 11      END IF;
+ 12      DBMS_OUTPUT.PUT_LINE(lv_rating);
+ 13  END;
+ 14  /
+low                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> --2-4 Using CASE Statements
+SQL> 
+SQL> --high result
+SQL> 
+SQL> DECLARE
+  2      lv_total_purchase_amt NUMBER(8,2) := 250;
+  3      lv_rating VARCHAR2(4);
+  4  BEGIN
+  5      CASE
+  6          WHEN lv_total_purchase_amt > 200 THEN lv_rating := 'high';
+  7          WHEN lv_total_purchase_amt > 100 THEN lv_rating := 'med';
+  8          ELSE lv_rating := 'low';
+  9      END CASE;
+ 10      DBMS_OUTPUT.PUT_LINE(lv_rating);
+ 11  END;
+ 12  /
+high                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> --med result
+SQL> 
+SQL> DECLARE
+  2      lv_total_purchase_amt NUMBER(8,2) := 190;
+  3      lv_rating VARCHAR2(4);
+  4  BEGIN
+  5      CASE
+  6          WHEN lv_total_purchase_amt > 200 THEN lv_rating := 'high';
+  7          WHEN lv_total_purchase_amt > 100 THEN lv_rating := 'med';
+  8          ELSE lv_rating := 'low';
+  9      END CASE;
+ 10      DBMS_OUTPUT.PUT_LINE(lv_rating);
+ 11  END;
+ 12  /
+med                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- low result
+SQL> 
+SQL> DECLARE
+  2      lv_total_purchase_amt NUMBER(8,2) := 99;
+  3      lv_rating VARCHAR2(4);
+  4  BEGIN
+  5      CASE
+  6          WHEN lv_total_purchase_amt > 200 THEN lv_rating := 'high';
+  7          WHEN lv_total_purchase_amt > 100 THEN lv_rating := 'med';
+  8          ELSE lv_rating := 'low';
+  9      END CASE;
+ 10      DBMS_OUTPUT.PUT_LINE(lv_rating);
+ 11  END;
+ 12  /
+low                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> --2-5 Using a Boolean Variable
+SQL> 
+SQL> --TRUE result
+SQL> 
+SQL> DECLARE
+  2      lv_account_bal NUMBER(8,2) := 100;
+  3      lv_payment_amt_recieved NUMBER(8,2) := 99;
+  4      lv_amount_due_bln BOOLEAN;
+  5  BEGIN
+  6      IF lv_account_bal - lv_payment_amt_recieved > 0 THEN
+  7         lv_amount_due_bln := TRUE;
+  8      ELSE
+  9         lv_amount_due_bln := FALSE;
+ 10      END IF;
+ 11      CASE lv_amount_due_bln
+ 12          WHEN TRUE THEN DBMS_OUTPUT.PUT_LINE('A balance is still owed.');
+ 13          ELSE DBMS_OUTPUT.PUT_LINE('The account is paid in full.');
+ 14      END CASE;
+ 15  END;
+ 16  /
+A balance is still owed.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> --FALSE Result
+SQL> 
+SQL> DECLARE
+  2      lv_account_bal NUMBER(8,2) := 100;
+  3      lv_payment_amt_recieved NUMBER(8,2) := 100;
+  4      lv_amount_due_bln BOOLEAN;
+  5  BEGIN
+  6      IF lv_account_bal - lv_payment_amt_recieved > 0 THEN
+  7         lv_amount_due_bln := TRUE;
+  8      ELSE
+  9         lv_amount_due_bln := FALSE;
+ 10      END IF;
+ 11      CASE lv_amount_due_bln
+ 12          WHEN TRUE THEN DBMS_OUTPUT.PUT_LINE('A balance is still owed.');
+ 13          ELSE DBMS_OUTPUT.PUT_LINE('The account is paid in full.');
+ 14      END CASE;
+ 15  END;
+ 16  /
+The account is paid in full.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> --2-6 Using Looping Statements
+SQL> 
+SQL> DECLARE
+  2      lv_price NUMBER(8,2):= 20;
+  3      lv_avail_spend NUMBER(8,2) := 100;
+  4      lv_itm_cnt NUMBER(8,2) := 0;
+  5  BEGIN
+  6      WHILE lv_avail_spend >= lv_price LOOP
+  7          lv_itm_cnt := lv_itm_cnt + 1;
+  8          lv_avail_spend := lv_avail_spend - lv_price;
+  9      END LOOP;
+ 10      DBMS_OUTPUT.PUT_LINE('Items purchased:');
+ 11      DBMS_OUTPUT.PUT_LINE(lv_itm_cnt);
+ 12      DBMS_OUTPUT.PUT_LINE('Total amount spent:');
+ 13      DBMS_OUTPUT.PUT_LINE(lv_price * lv_itm_cnt);
+ 14  END;
+ 15  /
+Items purchased:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+5                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+Total amount spent:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+100                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> --2-8 Using IF Statements
+SQL> 
+SQL> -- 0 result, Y
+SQL> 
+SQL> DECLARE
+  2      lv_mbr_stat CHAR(1) NOT NULL := 'Y';
+  3      lv_items_purchased NUMBER (8) := 0;
+  4      lv_shipping_cost NUMBER (4,2);
+  5  BEGIN
+  6      IF lv_mbr_stat = 'Y' THEN
+  7          IF lv_items_purchased <= 0 THEN
+  8              lv_shipping_cost := 0;
+  9           ELSIF lv_items_purchased >= 1 AND lv_items_purchased <= 3 THEN
+ 10              lv_shipping_cost := 3.00;
+ 11           ELSIF lv_items_purchased >= 4 AND lv_items_purchased <= 6 THEN
+ 12              lv_shipping_cost := 5.00;
+ 13           ELSIF lv_items_purchased >= 7 AND lv_items_purchased <= 10 THEN
+ 14              lv_shipping_cost := 7.00;
+ 15           ELSE lv_shipping_cost := 9.00;
+ 16           END IF;
+ 17      ELSIF lv_mbr_stat = 'N' THEN
+ 18          IF lv_items_purchased <= 0 THEN
+ 19              lv_shipping_cost := 0;
+ 20          ELSIF lv_items_purchased >= 1 AND lv_items_purchased <= 3 THEN
+ 21              lv_shipping_cost := 5.00;
+ 22          ELSIF lv_items_purchased >= 4 AND lv_items_purchased <= 6 THEN
+ 23              lv_shipping_cost := 7.50;
+ 24          ELSIF lv_items_purchased >= 7 AND lv_items_purchased <= 10 THEN
+ 25              lv_shipping_cost := 10.00;
+ 26          ELSE lv_shipping_cost := 12.00;
+ 27          END IF;
+ 28      END IF;
+ 29      DBMS_OUTPUT.PUT_LINE('Shipping Cost:');
+ 30      DBMS_OUTPUT.PUT_LINE(TO_CHAR(lv_shipping_cost, '$99.99'));
+ 31  END;
+ 32  /
+Shipping Cost:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+$.00                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- 2 result, Y
+SQL> 
+SQL> DECLARE
+  2      lv_mbr_stat CHAR(1) NOT NULL := 'Y';
+  3      lv_items_purchased NUMBER (8) := 2;
+  4      lv_shipping_cost NUMBER (4,2);
+  5  BEGIN
+  6      IF lv_mbr_stat = 'Y' THEN
+  7          IF lv_items_purchased <= 0 THEN
+  8              lv_shipping_cost := 0;
+  9           ELSIF lv_items_purchased >= 1 AND lv_items_purchased <= 3 THEN
+ 10              lv_shipping_cost := 3.00;
+ 11           ELSIF lv_items_purchased >= 4 AND lv_items_purchased <= 6 THEN
+ 12              lv_shipping_cost := 5.00;
+ 13           ELSIF lv_items_purchased >= 7 AND lv_items_purchased <= 10 THEN
+ 14              lv_shipping_cost := 7.00;
+ 15           ELSE lv_shipping_cost := 9.00;
+ 16           END IF;
+ 17      ELSIF lv_mbr_stat = 'N' THEN
+ 18          IF lv_items_purchased <= 0 THEN
+ 19              lv_shipping_cost := 0;
+ 20          ELSIF lv_items_purchased >= 1 AND lv_items_purchased <= 3 THEN
+ 21              lv_shipping_cost := 5.00;
+ 22          ELSIF lv_items_purchased >= 4 AND lv_items_purchased <= 6 THEN
+ 23              lv_shipping_cost := 7.50;
+ 24          ELSIF lv_items_purchased >= 7 AND lv_items_purchased <= 10 THEN
+ 25              lv_shipping_cost := 10.00;
+ 26          ELSE lv_shipping_cost := 12.00;
+ 27          END IF;
+ 28      END IF;
+ 29      DBMS_OUTPUT.PUT_LINE('Shipping Cost:');
+ 30      DBMS_OUTPUT.PUT_LINE(TO_CHAR(lv_shipping_cost, '$99.99'));
+ 31  END;
+ 32  /
+Shipping Cost:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+$3.00                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- 5 result, Y
+SQL> 
+SQL> DECLARE
+  2      lv_mbr_stat CHAR(1) NOT NULL := 'Y';
+  3      lv_items_purchased NUMBER (8) := 5;
+  4      lv_shipping_cost NUMBER (4,2);
+  5  BEGIN
+  6      IF lv_mbr_stat = 'Y' THEN
+  7          IF lv_items_purchased <= 0 THEN
+  8              lv_shipping_cost := 0;
+  9           ELSIF lv_items_purchased >= 1 AND lv_items_purchased <= 3 THEN
+ 10              lv_shipping_cost := 3.00;
+ 11           ELSIF lv_items_purchased >= 4 AND lv_items_purchased <= 6 THEN
+ 12              lv_shipping_cost := 5.00;
+ 13           ELSIF lv_items_purchased >= 7 AND lv_items_purchased <= 10 THEN
+ 14              lv_shipping_cost := 7.00;
+ 15           ELSE lv_shipping_cost := 9.00;
+ 16           END IF;
+ 17      ELSIF lv_mbr_stat = 'N' THEN
+ 18          IF lv_items_purchased <= 0 THEN
+ 19              lv_shipping_cost := 0;
+ 20          ELSIF lv_items_purchased >= 1 AND lv_items_purchased <= 3 THEN
+ 21              lv_shipping_cost := 5.00;
+ 22          ELSIF lv_items_purchased >= 4 AND lv_items_purchased <= 6 THEN
+ 23              lv_shipping_cost := 7.50;
+ 24          ELSIF lv_items_purchased >= 7 AND lv_items_purchased <= 10 THEN
+ 25              lv_shipping_cost := 10.00;
+ 26          ELSE lv_shipping_cost := 12.00;
+ 27          END IF;
+ 28      END IF;
+ 29      DBMS_OUTPUT.PUT_LINE('Shipping Cost:');
+ 30      DBMS_OUTPUT.PUT_LINE(TO_CHAR(lv_shipping_cost, '$99.99'));
+ 31  END;
+ 32  /
+Shipping Cost:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+$5.00                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- 7 result, Y
+SQL> 
+SQL> DECLARE
+  2      lv_mbr_stat CHAR(1) NOT NULL := 'Y';
+  3      lv_items_purchased NUMBER (8) := 7;
+  4      lv_shipping_cost NUMBER (4,2);
+  5  BEGIN
+  6      IF lv_mbr_stat = 'Y' THEN
+  7          IF lv_items_purchased <= 0 THEN
+  8              lv_shipping_cost := 0;
+  9           ELSIF lv_items_purchased >= 1 AND lv_items_purchased <= 3 THEN
+ 10              lv_shipping_cost := 3.00;
+ 11           ELSIF lv_items_purchased >= 4 AND lv_items_purchased <= 6 THEN
+ 12              lv_shipping_cost := 5.00;
+ 13           ELSIF lv_items_purchased >= 7 AND lv_items_purchased <= 10 THEN
+ 14              lv_shipping_cost := 7.00;
+ 15           ELSE lv_shipping_cost := 9.00;
+ 16           END IF;
+ 17      ELSIF lv_mbr_stat = 'N' THEN
+ 18          IF lv_items_purchased <= 0 THEN
+ 19              lv_shipping_cost := 0;
+ 20          ELSIF lv_items_purchased >= 1 AND lv_items_purchased <= 3 THEN
+ 21              lv_shipping_cost := 5.00;
+ 22          ELSIF lv_items_purchased >= 4 AND lv_items_purchased <= 6 THEN
+ 23              lv_shipping_cost := 7.50;
+ 24          ELSIF lv_items_purchased >= 7 AND lv_items_purchased <= 10 THEN
+ 25              lv_shipping_cost := 10.00;
+ 26          ELSE lv_shipping_cost := 12.00;
+ 27          END IF;
+ 28      END IF;
+ 29      DBMS_OUTPUT.PUT_LINE('Shipping Cost:');
+ 30      DBMS_OUTPUT.PUT_LINE(TO_CHAR(lv_shipping_cost, '$99.99'));
+ 31  END;
+ 32  /
+Shipping Cost:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+$7.00                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- 11 result, Y
+SQL> 
+SQL> DECLARE
+  2      lv_mbr_stat CHAR(1) NOT NULL := 'Y';
+  3      lv_items_purchased NUMBER (8) := 11;
+  4      lv_shipping_cost NUMBER (4,2);
+  5  BEGIN
+  6      IF lv_mbr_stat = 'Y' THEN
+  7          IF lv_items_purchased <= 0 THEN
+  8              lv_shipping_cost := 0;
+  9           ELSIF lv_items_purchased >= 1 AND lv_items_purchased <= 3 THEN
+ 10              lv_shipping_cost := 3.00;
+ 11           ELSIF lv_items_purchased >= 4 AND lv_items_purchased <= 6 THEN
+ 12              lv_shipping_cost := 5.00;
+ 13           ELSIF lv_items_purchased >= 7 AND lv_items_purchased <= 10 THEN
+ 14              lv_shipping_cost := 7.00;
+ 15           ELSE lv_shipping_cost := 9.00;
+ 16           END IF;
+ 17      ELSIF lv_mbr_stat = 'N' THEN
+ 18          IF lv_items_purchased <= 0 THEN
+ 19              lv_shipping_cost := 0;
+ 20          ELSIF lv_items_purchased >= 1 AND lv_items_purchased <= 3 THEN
+ 21              lv_shipping_cost := 5.00;
+ 22          ELSIF lv_items_purchased >= 4 AND lv_items_purchased <= 6 THEN
+ 23              lv_shipping_cost := 7.50;
+ 24          ELSIF lv_items_purchased >= 7 AND lv_items_purchased <= 10 THEN
+ 25              lv_shipping_cost := 10.00;
+ 26          ELSE lv_shipping_cost := 12.00;
+ 27          END IF;
+ 28      END IF;
+ 29      DBMS_OUTPUT.PUT_LINE('Shipping Cost:');
+ 30      DBMS_OUTPUT.PUT_LINE(TO_CHAR(lv_shipping_cost, '$99.99'));
+ 31  END;
+ 32  /
+Shipping Cost:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+$9.00                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- 0 result, N
+SQL> 
+SQL> DECLARE
+  2      lv_mbr_stat CHAR(1) NOT NULL := 'N';
+  3      lv_items_purchased NUMBER (8) := 0;
+  4      lv_shipping_cost NUMBER (4,2);
+  5  BEGIN
+  6      IF lv_mbr_stat = 'Y' THEN
+  7          IF lv_items_purchased <= 0 THEN
+  8              lv_shipping_cost := 0;
+  9           ELSIF lv_items_purchased >= 1 AND lv_items_purchased <= 3 THEN
+ 10              lv_shipping_cost := 3.00;
+ 11           ELSIF lv_items_purchased >= 4 AND lv_items_purchased <= 6 THEN
+ 12              lv_shipping_cost := 5.00;
+ 13           ELSIF lv_items_purchased >= 7 AND lv_items_purchased <= 10 THEN
+ 14              lv_shipping_cost := 7.00;
+ 15           ELSE lv_shipping_cost := 9.00;
+ 16           END IF;
+ 17      ELSIF lv_mbr_stat = 'N' THEN
+ 18          IF lv_items_purchased <= 0 THEN
+ 19              lv_shipping_cost := 0;
+ 20          ELSIF lv_items_purchased >= 1 AND lv_items_purchased <= 3 THEN
+ 21              lv_shipping_cost := 5.00;
+ 22          ELSIF lv_items_purchased >= 4 AND lv_items_purchased <= 6 THEN
+ 23              lv_shipping_cost := 7.50;
+ 24          ELSIF lv_items_purchased >= 7 AND lv_items_purchased <= 10 THEN
+ 25              lv_shipping_cost := 10.00;
+ 26          ELSE lv_shipping_cost := 12.00;
+ 27          END IF;
+ 28      END IF;
+ 29      DBMS_OUTPUT.PUT_LINE('Shipping Cost:');
+ 30      DBMS_OUTPUT.PUT_LINE(TO_CHAR(lv_shipping_cost, '$99.99'));
+ 31  END;
+ 32  /
+Shipping Cost:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+$.00                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- 2 result, N
+SQL> 
+SQL> DECLARE
+  2      lv_mbr_stat CHAR(1) NOT NULL := 'N';
+  3      lv_items_purchased NUMBER (8) := 2;
+  4      lv_shipping_cost NUMBER (4,2);
+  5  BEGIN
+  6      IF lv_mbr_stat = 'Y' THEN
+  7          IF lv_items_purchased <= 0 THEN
+  8              lv_shipping_cost := 0;
+  9           ELSIF lv_items_purchased >= 1 AND lv_items_purchased <= 3 THEN
+ 10              lv_shipping_cost := 3.00;
+ 11           ELSIF lv_items_purchased >= 4 AND lv_items_purchased <= 6 THEN
+ 12              lv_shipping_cost := 5.00;
+ 13           ELSIF lv_items_purchased >= 7 AND lv_items_purchased <= 10 THEN
+ 14              lv_shipping_cost := 7.00;
+ 15           ELSE lv_shipping_cost := 9.00;
+ 16           END IF;
+ 17      ELSIF lv_mbr_stat = 'N' THEN
+ 18          IF lv_items_purchased <= 0 THEN
+ 19              lv_shipping_cost := 0;
+ 20          ELSIF lv_items_purchased >= 1 AND lv_items_purchased <= 3 THEN
+ 21              lv_shipping_cost := 5.00;
+ 22          ELSIF lv_items_purchased >= 4 AND lv_items_purchased <= 6 THEN
+ 23              lv_shipping_cost := 7.50;
+ 24          ELSIF lv_items_purchased >= 7 AND lv_items_purchased <= 10 THEN
+ 25              lv_shipping_cost := 10.00;
+ 26          ELSE lv_shipping_cost := 12.00;
+ 27          END IF;
+ 28      END IF;
+ 29      DBMS_OUTPUT.PUT_LINE('Shipping Cost:');
+ 30      DBMS_OUTPUT.PUT_LINE(TO_CHAR(lv_shipping_cost, '$99.99'));
+ 31  END;
+ 32  /
+Shipping Cost:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+$5.00                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- 5 result, N
+SQL> 
+SQL> DECLARE
+  2      lv_mbr_stat CHAR(1) NOT NULL := 'N';
+  3      lv_items_purchased NUMBER (8) := 5;
+  4      lv_shipping_cost NUMBER (4,2);
+  5  BEGIN
+  6      IF lv_mbr_stat = 'Y' THEN
+  7          IF lv_items_purchased <= 0 THEN
+  8              lv_shipping_cost := 0;
+  9           ELSIF lv_items_purchased >= 1 AND lv_items_purchased <= 3 THEN
+ 10              lv_shipping_cost := 3.00;
+ 11           ELSIF lv_items_purchased >= 4 AND lv_items_purchased <= 6 THEN
+ 12              lv_shipping_cost := 5.00;
+ 13           ELSIF lv_items_purchased >= 7 AND lv_items_purchased <= 10 THEN
+ 14              lv_shipping_cost := 7.00;
+ 15           ELSE lv_shipping_cost := 9.00;
+ 16           END IF;
+ 17      ELSIF lv_mbr_stat = 'N' THEN
+ 18          IF lv_items_purchased <= 0 THEN
+ 19              lv_shipping_cost := 0;
+ 20          ELSIF lv_items_purchased >= 1 AND lv_items_purchased <= 3 THEN
+ 21              lv_shipping_cost := 5.00;
+ 22          ELSIF lv_items_purchased >= 4 AND lv_items_purchased <= 6 THEN
+ 23              lv_shipping_cost := 7.50;
+ 24          ELSIF lv_items_purchased >= 7 AND lv_items_purchased <= 10 THEN
+ 25              lv_shipping_cost := 10.00;
+ 26          ELSE lv_shipping_cost := 12.00;
+ 27          END IF;
+ 28      END IF;
+ 29      DBMS_OUTPUT.PUT_LINE('Shipping Cost:');
+ 30      DBMS_OUTPUT.PUT_LINE(TO_CHAR(lv_shipping_cost, '$99.99'));
+ 31  END;
+ 32  /
+Shipping Cost:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+$7.50                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- 7 result, N
+SQL> 
+SQL> DECLARE
+  2      lv_mbr_stat CHAR(1) NOT NULL := 'N';
+  3      lv_items_purchased NUMBER (8) := 7;
+  4      lv_shipping_cost NUMBER (4,2);
+  5  BEGIN
+  6      IF lv_mbr_stat = 'Y' THEN
+  7          IF lv_items_purchased <= 0 THEN
+  8              lv_shipping_cost := 0;
+  9           ELSIF lv_items_purchased >= 1 AND lv_items_purchased <= 3 THEN
+ 10              lv_shipping_cost := 3.00;
+ 11           ELSIF lv_items_purchased >= 4 AND lv_items_purchased <= 6 THEN
+ 12              lv_shipping_cost := 5.00;
+ 13           ELSIF lv_items_purchased >= 7 AND lv_items_purchased <= 10 THEN
+ 14              lv_shipping_cost := 7.00;
+ 15           ELSE lv_shipping_cost := 9.00;
+ 16           END IF;
+ 17      ELSIF lv_mbr_stat = 'N' THEN
+ 18          IF lv_items_purchased <= 0 THEN
+ 19              lv_shipping_cost := 0;
+ 20          ELSIF lv_items_purchased >= 1 AND lv_items_purchased <= 3 THEN
+ 21              lv_shipping_cost := 5.00;
+ 22          ELSIF lv_items_purchased >= 4 AND lv_items_purchased <= 6 THEN
+ 23              lv_shipping_cost := 7.50;
+ 24          ELSIF lv_items_purchased >= 7 AND lv_items_purchased <= 10 THEN
+ 25              lv_shipping_cost := 10.00;
+ 26          ELSE lv_shipping_cost := 12.00;
+ 27          END IF;
+ 28      END IF;
+ 29      DBMS_OUTPUT.PUT_LINE('Shipping Cost:');
+ 30      DBMS_OUTPUT.PUT_LINE(TO_CHAR(lv_shipping_cost, '$99.99'));
+ 31  END;
+ 32  /
+Shipping Cost:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+$10.00                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- 11 result, N
+SQL> 
+SQL> DECLARE
+  2      lv_mbr_stat CHAR(1) NOT NULL := 'N';
+  3      lv_items_purchased NUMBER (8) := 11;
+  4      lv_shipping_cost NUMBER (4,2);
+  5  BEGIN
+  6      IF lv_mbr_stat = 'Y' THEN
+  7          IF lv_items_purchased <= 0 THEN
+  8              lv_shipping_cost := 0;
+  9           ELSIF lv_items_purchased >= 1 AND lv_items_purchased <= 3 THEN
+ 10              lv_shipping_cost := 3.00;
+ 11           ELSIF lv_items_purchased >= 4 AND lv_items_purchased <= 6 THEN
+ 12              lv_shipping_cost := 5.00;
+ 13           ELSIF lv_items_purchased >= 7 AND lv_items_purchased <= 10 THEN
+ 14              lv_shipping_cost := 7.00;
+ 15           ELSE lv_shipping_cost := 9.00;
+ 16           END IF;
+ 17      ELSIF lv_mbr_stat = 'N' THEN
+ 18          IF lv_items_purchased <= 0 THEN
+ 19              lv_shipping_cost := 0;
+ 20          ELSIF lv_items_purchased >= 1 AND lv_items_purchased <= 3 THEN
+ 21              lv_shipping_cost := 5.00;
+ 22          ELSIF lv_items_purchased >= 4 AND lv_items_purchased <= 6 THEN
+ 23              lv_shipping_cost := 7.50;
+ 24          ELSIF lv_items_purchased >= 7 AND lv_items_purchased <= 10 THEN
+ 25              lv_shipping_cost := 10.00;
+ 26          ELSE lv_shipping_cost := 12.00;
+ 27          END IF;
+ 28      END IF;
+ 29      DBMS_OUTPUT.PUT_LINE('Shipping Cost:');
+ 30      DBMS_OUTPUT.PUT_LINE(TO_CHAR(lv_shipping_cost, '$99.99'));
+ 31  END;
+ 32  /
+Shipping Cost:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+$12.00                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> 
+SQL> spool off

@@ -1,0 +1,78 @@
+SQL> SET SERVEROUTPUT ON SIZE UNLIMITED;
+SQL> 
+SQL> --Lab 8
+SQL> 
+SQL> -- Assignment 8-10: Using Conditional Compilation
+SQL> -- run a command that displays
+SQL> -- The complier source code for the producdure when the complier flag value is TRUE
+SQL> 
+SQL> CREATE OR REPLACE PROCEDURE dd_comp1_sp
+  2   AUTHID CURRENT_USER
+  3   IS
+  4   BEGIN
+  5   $IF $$ASSIGN $THEN
+  6    DBMS_OUTPUT.PUT_LINE('ASSIGN is TRUE');
+  7    DBMS_PREPROCESSOR.PRINT_POST_PROCESSED_SOURCE('PROCEDURE','BREWBEANS','DD_COMP1_SP');
+  8   $ELSE
+  9    DBMS_OUTPUT.PUT_LINE('ASSIGN is FALSE');
+ 10   $END
+ 11  END dd_comp1_sp;
+ 12  /
+
+Procedure created.
+
+SQL> 
+SQL> -- TRUE Flag with source code
+SQL> 
+SQL> ALTER SESSION SET PLSQL_CCFLAGS = 'ASSIGN:TRUE';
+
+Session altered.
+
+SQL> 
+SQL> 
+SQL> ALTER PROCEDURE dd_comp1_sp COMPILE;
+
+Procedure altered.
+
+SQL> 
+SQL> 
+SQL> BEGIN
+  2   dd_comp1_sp;
+  3  END;
+  4  /
+ASSIGN is TRUE                                                                  
+PROCEDURE dd_comp1_sp                                                           
+AUTHID CURRENT_USER                                                             
+IS                                                                              
+BEGIN                                                                           
+DBMS_OUTPUT.PUT_LINE('ASSIGN is TRUE');                                         
+DBMS_PREPROCESSOR.PRINT_POST_PROCESSED_SOURCE('PROCEDURE','BREWBEANS','DD_COMP1_
+SP');                                                                           
+END dd_comp1_sp;                                                                
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- FALSE Flag
+SQL> 
+SQL> ALTER SESSION SET PLSQL_CCFLAGS = 'ASSIGN:FALSE';
+
+Session altered.
+
+SQL> 
+SQL> 
+SQL> ALTER PROCEDURE dd_comp1_sp COMPILE;
+
+Procedure altered.
+
+SQL> 
+SQL> 
+SQL> BEGIN
+  2   dd_comp1_sp;
+  3  END;
+  4  /
+ASSIGN is FALSE                                                                 
+
+PL/SQL procedure successfully completed.
+
+SQL> spool off;

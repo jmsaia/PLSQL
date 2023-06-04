@@ -1,0 +1,52 @@
+SQL> SET SERVEROUTPUT ON SIZE UNLIMITED;
+SQL> 
+SQL> -- Project 4
+SQL> 
+SQL> -- More Movies DB
+SQL> -- return text file containing a line for each time all copies of a movie are checked out
+SQL> -- Each line in the file should contain the date, movie ID, and movie stock quantity
+SQL> -- To do this, code needs to be created in a database trigger.
+SQL> -- Keep in mind that this file should maintain a continuous record, so each new line should be appended to the file.
+SQL> -- Name the file checkout.txt and save it.
+SQL> 
+SQL> -- Trigger that returns all 0 results. returns 0 inventory at a moment in time.
+SQL> 
+SQL> CREATE OR REPLACE TRIGGER movie_allcheckedout_trg
+  2   AFTER UPDATE OF movie_qty ON mm_movie
+  3  DECLARE
+  4     CURSOR cur_zero_qty IS
+  5     SELECT movie_id, movie_qty
+  6     FROM mm_movie
+  7     WHERE movie_qty = 0;
+  8     fh UTL_FILE.FILE_TYPE;
+  9  BEGIN
+ 10   fh := UTL_FILE.FOPEN('ORA_FILES', 'checkout.txt', 'a');
+ 11   FOR rec_movie_zero_return IN cur_zero_qty LOOP
+ 12    UTL_FILE.PUT_LINE(fh, SYSDATE||' '||rec_movie_zero_return.movie_id||' '||rec_movie_zero_return.movie_qty);
+ 13   END LOOP;
+ 14   UTL_FILE.FCLOSE(fh);
+ 15   EXCEPTION
+ 16    WHEN OTHERS THEN
+ 17     DBMS_OUTPUT.PUT_LINE(SQLERRM);
+ 18  END;
+ 19  /
+
+Trigger created.
+
+SQL> 
+SQL> -- UPDATE 1
+SQL> 
+SQL> UPDATE mm_movie SET movie_qty = 0
+  2  WHERE movie_id = 7;
+
+1 row updated.
+
+SQL> 
+SQL> -- UPDATE 2
+SQL> 
+SQL> UPDATE mm_movie SET movie_qty = 0
+  2  WHERE movie_id = 8;
+
+1 row updated.
+
+SQL>   spool off

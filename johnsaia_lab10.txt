@@ -1,0 +1,30 @@
+SQL> SET SERVEROUTPUT ON SIZE UNLIMITED;
+SQL> 
+SQL> --Lab 10
+SQL> 
+SQL> --Assignment 10-4: Using the UTL_FILE Package to Export Data Columns
+SQL> 
+SQL> -- create PL/SQL block placing data columns in a CSV named prod_ext.txt
+SQL> -- in a directory
+SQL> -- contains one line per product and the following columns of BB_PRODUCT table:
+SQL> -- IDPRODUCT, PRODUCTNAME, PRICE, TYPE, STOCK, ORDERED, and REORDER.
+SQL> 
+SQL> DECLARE
+  2   CURSOR cur_in_cflow IS
+  3   SELECT idproduct, productname, price, type, stock, ordered, reorder
+  4   FROM bb_product;
+  5   fh UTL_FILE.FILE_TYPE;
+  6  BEGIN
+  7   fh := UTL_FILE.FOPEN('ORA_FILES', 'prod_ext.txt' , 'w');
+  8   FOR rec_in_cflow IN cur_in_cflow LOOP
+  9    UTL_FILE.PUT_LINE(fh,rec_in_cflow.idproduct||','||rec_in_cflow.productname||','||
+ 10                   rec_in_cflow.price||','||rec_in_cflow.type||','||rec_in_cflow.stock||
+ 11                   ','||rec_in_cflow.ordered||','||rec_in_cflow.reorder);
+ 12   END LOOP;
+ 13   UTL_FILE.FCLOSE(fh);
+ 14  END;
+ 15  /
+
+PL/SQL procedure successfully completed.
+
+SQL> spool off

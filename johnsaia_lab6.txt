@@ -1,0 +1,451 @@
+SQL> SET SERVEROUTPUT ON SIZE UNLIMITED;
+SQL> 
+SQL> -- Lab6
+SQL> 
+SQL> -- 6-9:Determining the Monthly Payment Amount
+SQL> 
+SQL> -- Function to determine monthly payments
+SQL> 
+SQL> CREATE OR REPLACE FUNCTION DD_MTHPAY_SF
+  2   (p_pl_amt NUMBER,
+  3    p_num_m_pay NUMBER)
+  4   RETURN NUMBER
+  5  IS
+  6   lv_m_pay_amt dd_pledge.pledgeamt%TYPE;
+  7  BEGIN
+  8   IF p_num_m_pay = 0 THEN
+  9    lv_m_pay_amt := 0;
+ 10   ELSE
+ 11    lv_m_pay_amt := p_pl_amt/p_num_m_pay;
+ 12   END IF;
+ 13   RETURN lv_m_pay_amt;
+ 14  END;
+ 15  /
+
+Function created.
+
+SQL> 
+SQL> -- Function, use 240 pledge amount, 12 monthly payments
+SQL> 
+SQL> DECLARE
+  2   lv_pl_amt NUMBER(3):= 240;
+  3   lv_m_pay NUMBER(2) := 12;
+  4   lv_m_amt NUMBER(2);
+  5  BEGIN
+  6   lv_m_amt := dd_mthpay_sf(lv_pl_amt, lv_m_pay);
+  7   DBMS_OUTPUT.PUT_LINE('Monthly Payment: '||lv_m_amt);
+  8  END;
+  9  /
+Monthly Payment: 20                                                             
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- Use function on SQL statement
+SQL> 
+SQL> SELECT p.idpledge, dd_mthpay_sf(p.pledgeamt,p.paymonths) Monthly_Payment
+  2  FROM dd_pledge p;
+
+  IDPLEDGE MONTHLY_PAYMENT                                                      
+---------- ---------------                                                      
+       100               0                                                      
+       101               0                                                      
+       102               0                                                      
+       103               0                                                      
+       104              20                                                      
+       105              10                                                      
+       106               0                                                      
+       107              50                                                      
+       108              20                                                      
+       109              30                                                      
+       110              25                                                      
+
+  IDPLEDGE MONTHLY_PAYMENT                                                      
+---------- ---------------                                                      
+       111               0                                                      
+       112              20                                                      
+
+13 rows selected.
+
+SQL> /
+
+  IDPLEDGE MONTHLY_PAYMENT                                                      
+---------- ---------------                                                      
+       100               0                                                      
+       101               0                                                      
+       102               0                                                      
+       103               0                                                      
+       104              20                                                      
+       105              10                                                      
+       106               0                                                      
+       107              50                                                      
+       108              20                                                      
+       109              30                                                      
+       110              25                                                      
+
+  IDPLEDGE MONTHLY_PAYMENT                                                      
+---------- ---------------                                                      
+       111               0                                                      
+       112              20                                                      
+
+13 rows selected.
+
+SQL> 
+SQL> -- 6-10: Calculating the Total Project Pledge Amount
+SQL> 
+SQL> -- Create a function that returns the total pledge amount for a specific project
+SQL> 
+SQL> CREATE OR REPLACE FUNCTION DD_PROJTOT_SF
+  2   (p_proj_id NUMBER)
+  3   RETURN VARCHAR2
+  4  IS
+  5    TYPE type_pledge_info IS RECORD
+  6    (proj_id dd_pledge.idproj%TYPE,
+  7     tot_pl_amt NUMBER(10));
+  8    pledge_info type_pledge_info;
+  9    lv_pro_pl_amt VARCHAR2(10);
+ 10  BEGIN
+ 11   SELECT p.idproj, SUM(p.pledgeamt)
+ 12   INTO pledge_info
+ 13   FROM dd_pledge p
+ 14   WHERE p.idproj = p_proj_id
+ 15   GROUP BY p.idproj;
+ 16   lv_pro_pl_amt := TO_CHAR(pledge_info.tot_pl_amt,'$9,999.99');
+ 17   RETURN lv_pro_pl_amt;
+ 18  EXCEPTION
+ 19   WHEN NO_DATA_FOUND THEN
+ 20   lv_pro_pl_amt := '0';
+ 21    RETURN lv_pro_pl_amt;
+ 22  END;
+ 23  /
+
+Function created.
+
+SQL> 
+SQL> --list all projects, displaying project ID, project name, and project pledge total amount
+SQL> 
+SQL> SELECT p.idproj, p.projname, dd_projtot_sf(p.idproj) Pledge_Total
+  2  FROM dd_project p;
+
+    IDPROJ PROJNAME                                                             
+---------- ------------------------------------------------------------         
+PLEDGE_TOTAL                                                                    
+--------------------------------------------------------------------------------
+       500 Elders Assistance League                                             
+   $190.00                                                                      
+                                                                                
+       501 Community food pantry #21 freezer equipment                          
+ $4,060.00                                                                      
+                                                                                
+       502 Lang Scholarship Fund                                                
+0                                                                               
+                                                                                
+
+    IDPROJ PROJNAME                                                             
+---------- ------------------------------------------------------------         
+PLEDGE_TOTAL                                                                    
+--------------------------------------------------------------------------------
+       503 Animal shelter Vet Connect Program                                   
+   $840.00                                                                      
+                                                                                
+       504 Shelter Share Project 2013                                           
+ $2,040.00                                                                      
+                                                                                
+
+SQL> /
+
+    IDPROJ PROJNAME                                                             
+---------- ------------------------------------------------------------         
+PLEDGE_TOTAL                                                                    
+--------------------------------------------------------------------------------
+       500 Elders Assistance League                                             
+   $190.00                                                                      
+                                                                                
+       501 Community food pantry #21 freezer equipment                          
+ $4,060.00                                                                      
+                                                                                
+       502 Lang Scholarship Fund                                                
+0                                                                               
+                                                                                
+
+    IDPROJ PROJNAME                                                             
+---------- ------------------------------------------------------------         
+PLEDGE_TOTAL                                                                    
+--------------------------------------------------------------------------------
+       503 Animal shelter Vet Connect Program                                   
+   $840.00                                                                      
+                                                                                
+       504 Shelter Share Project 2013                                           
+ $2,040.00                                                                      
+                                                                                
+
+SQL> 
+SQL> -- 6-11: Identifying Pledge Status
+SQL> 
+SQL> -- Function that returns a status desc based on the status ID value
+SQL> 
+SQL> CREATE OR REPLACE FUNCTION DD_PLSTAT_SF
+  2   (p_status_id NUMBER)
+  3   RETURN VARCHAR2
+  4  IS
+  5   rec_status dd_status%ROWTYPE;
+  6   lv_status_desc dd_status.statusdesc%TYPE;
+  7  BEGIN
+  8   SELECT *
+  9   INTO rec_status
+ 10   FROM dd_status
+ 11   WHERE idstatus = p_status_id;
+ 12   lv_status_desc := rec_status.statusdesc;
+ 13   RETURN lv_status_desc;
+ 14  END;
+ 15  /
+
+Function created.
+
+SQL> 
+SQL> -- SQL Statement displays the pledge ID, pledge date, and pledge status for all pledges
+SQL> 
+SQL> SELECT p.idpledge, p.pledgedate, dd_plstat_sf(p.idstatus) Pledge_Status
+  2  FROM dd_pledge p;
+
+  IDPLEDGE PLEDGEDAT                                                            
+---------- ---------                                                            
+PLEDGE_STATUS                                                                   
+--------------------------------------------------------------------------------
+       100 18-SEP-12                                                            
+Complete                                                                        
+                                                                                
+       101 21-SEP-12                                                            
+Complete                                                                        
+                                                                                
+       102 01-OCT-12                                                            
+Complete                                                                        
+                                                                                
+
+  IDPLEDGE PLEDGEDAT                                                            
+---------- ---------                                                            
+PLEDGE_STATUS                                                                   
+--------------------------------------------------------------------------------
+       103 03-OCT-12                                                            
+Complete                                                                        
+                                                                                
+       104 04-OCT-12                                                            
+Open                                                                            
+                                                                                
+       105 08-OCT-12                                                            
+Open                                                                            
+                                                                                
+
+  IDPLEDGE PLEDGEDAT                                                            
+---------- ---------                                                            
+PLEDGE_STATUS                                                                   
+--------------------------------------------------------------------------------
+       106 12-OCT-12                                                            
+Complete                                                                        
+                                                                                
+       107 15-OCT-12                                                            
+Open                                                                            
+                                                                                
+       108 20-JAN-13                                                            
+Open                                                                            
+                                                                                
+
+  IDPLEDGE PLEDGEDAT                                                            
+---------- ---------                                                            
+PLEDGE_STATUS                                                                   
+--------------------------------------------------------------------------------
+       109 01-FEB-13                                                            
+Open                                                                            
+                                                                                
+       110 01-MAR-13                                                            
+Open                                                                            
+                                                                                
+       111 01-MAR-13                                                            
+Complete                                                                        
+                                                                                
+
+  IDPLEDGE PLEDGEDAT                                                            
+---------- ---------                                                            
+PLEDGE_STATUS                                                                   
+--------------------------------------------------------------------------------
+       112 16-MAR-13                                                            
+Open                                                                            
+                                                                                
+
+13 rows selected.
+
+SQL> /
+
+  IDPLEDGE PLEDGEDAT                                                            
+---------- ---------                                                            
+PLEDGE_STATUS                                                                   
+--------------------------------------------------------------------------------
+       100 18-SEP-12                                                            
+Complete                                                                        
+                                                                                
+       101 21-SEP-12                                                            
+Complete                                                                        
+                                                                                
+       102 01-OCT-12                                                            
+Complete                                                                        
+                                                                                
+
+  IDPLEDGE PLEDGEDAT                                                            
+---------- ---------                                                            
+PLEDGE_STATUS                                                                   
+--------------------------------------------------------------------------------
+       103 03-OCT-12                                                            
+Complete                                                                        
+                                                                                
+       104 04-OCT-12                                                            
+Open                                                                            
+                                                                                
+       105 08-OCT-12                                                            
+Open                                                                            
+                                                                                
+
+  IDPLEDGE PLEDGEDAT                                                            
+---------- ---------                                                            
+PLEDGE_STATUS                                                                   
+--------------------------------------------------------------------------------
+       106 12-OCT-12                                                            
+Complete                                                                        
+                                                                                
+       107 15-OCT-12                                                            
+Open                                                                            
+                                                                                
+       108 20-JAN-13                                                            
+Open                                                                            
+                                                                                
+
+  IDPLEDGE PLEDGEDAT                                                            
+---------- ---------                                                            
+PLEDGE_STATUS                                                                   
+--------------------------------------------------------------------------------
+       109 01-FEB-13                                                            
+Open                                                                            
+                                                                                
+       110 01-MAR-13                                                            
+Open                                                                            
+                                                                                
+       111 01-MAR-13                                                            
+Complete                                                                        
+                                                                                
+
+  IDPLEDGE PLEDGEDAT                                                            
+---------- ---------                                                            
+PLEDGE_STATUS                                                                   
+--------------------------------------------------------------------------------
+       112 16-MAR-13                                                            
+Open                                                                            
+                                                                                
+
+13 rows selected.
+
+SQL> 
+SQL> -- SQL Statement that displays the same values but for only a specified pledge
+SQL> 
+SQL> SELECT p.idpledge, p.pledgedate, dd_plstat_sf(p.idstatus) Pledge_Status
+  2  FROM dd_pledge p
+  3  WHERE p.idpledge = 104;
+
+  IDPLEDGE PLEDGEDAT                                                            
+---------- ---------                                                            
+PLEDGE_STATUS                                                                   
+--------------------------------------------------------------------------------
+       104 04-OCT-12                                                            
+Open                                                                            
+                                                                                
+
+SQL> /
+
+  IDPLEDGE PLEDGEDAT                                                            
+---------- ---------                                                            
+PLEDGE_STATUS                                                                   
+--------------------------------------------------------------------------------
+       104 04-OCT-12                                                            
+Open                                                                            
+                                                                                
+
+SQL> 
+SQL> -- 6-12: Determining a Pledge's First Payment Date
+SQL> 
+SQL> CREATE OR REPLACE FUNCTION DD_PAYDATE1_SF
+  2   (p_pledge_id NUMBER)
+  3   RETURN DATE
+  4  IS
+  5    TYPE type_paydate IS RECORD
+  6   (pledge_id dd_pledge.idpledge%TYPE,
+  7    pledgedate dd_pledge.pledgedate%TYPE);
+  8    paydate_info type_paydate;
+  9    lv_first_paydate DATE;
+ 10  BEGIN
+ 11   SELECT idpledge, TRUNC(ADD_MONTHS(pledgedate,1),'MONTH')
+ 12   INTO paydate_info
+ 13   FROM dd_pledge
+ 14   WHERE idpledge = p_pledge_id;
+ 15   lv_first_paydate := paydate_info.pledgedate;
+ 16   RETURN lv_first_paydate;
+ 17  END;
+ 18  /
+
+Function created.
+
+SQL> 
+SQL> -- anonymous block
+SQL> 
+SQL> DECLARE
+  2   lv_pledge_choice NUMBER(3):= 109;
+  3   lv_first_paydate DATE;
+  4  BEGIN
+  5   lv_first_paydate := dd_paydate1_sf(lv_pledge_choice);
+  6   DBMS_OUTPUT.PUT_LINE('Pledge: '||lv_pledge_choice||', First Payment Due: '||lv_first_paydate);
+  7  END;
+  8  /
+Pledge: 109, First Payment Due: 01-MAR-13                                       
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- 6-13: Determining a Pledge's Final Payment Date
+SQL> 
+SQL> -- Function to find final payment date
+SQL> 
+SQL> CREATE OR REPLACE FUNCTION DD_PAYEND_SF
+  2   (p_pledge_id NUMBER)
+  3   RETURN DATE
+  4  IS
+  5   lv_paymonths NUMBER(2);
+  6   lv_final_pay DATE;
+  7  BEGIN
+  8   SELECT p.paymonths
+  9   INTO lv_paymonths
+ 10   FROM dd_pledge p
+ 11   WHERE p.idpledge = p_pledge_id;
+ 12   IF lv_paymonths = 0 THEN
+ 13    RETURN dd_paydate1_sf(p_pledge_id);
+ 14   ELSE
+ 15    lv_final_pay := ADD_MONTHS(dd_paydate1_sf(p_pledge_id),lv_paymonths - 1);
+ 16    RETURN lv_final_pay;
+ 17   END IF;
+ 18  END;
+ 19  /
+
+Function created.
+
+SQL> 
+SQL> -- anonymous block
+SQL> 
+SQL> DECLARE
+  2   lv_pledge_choice NUMBER(3):= 109;
+  3   lv_last_paydate DATE;
+  4  BEGIN
+  5   lv_last_paydate := dd_payend_sf(lv_pledge_choice);
+  6   DBMS_OUTPUT.PUT_LINE('Pledge: '||lv_pledge_choice||', Final Payment Due: '||lv_last_paydate);
+  7  END;
+  8  /
+Pledge: 109, Final Payment Due: 01-FEB-14                                       
+
+PL/SQL procedure successfully completed.
+
+SQL> spool off

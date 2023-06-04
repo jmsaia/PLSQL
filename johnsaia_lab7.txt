@@ -1,0 +1,335 @@
+SQL> SET SERVEROUTPUT ON SIZE UNLIMITED;
+SQL> 
+SQL> -- Lab 7
+SQL> 
+SQL> -- 7-9: Creating a Package for Pledges
+SQL> 
+SQL> CREATE OR REPLACE PACKAGE pledge_pkg
+  2   IS
+  3    FUNCTION dd_paydate1_pf
+  4     (p_id IN dd_pledge.idpledge%TYPE)
+  5    RETURN DATE;
+  6    FUNCTION dd_payend_pf
+  7     (p_id IN dd_pledge.idpledge%TYPE)
+  8    RETURN DATE;
+  9  END;
+ 10  /
+
+Package created.
+
+SQL> 
+SQL> CREATE OR REPLACE PACKAGE BODY pledge_pkg
+  2   IS
+  3   FUNCTION dd_paydate1_pf
+  4     (p_id IN dd_pledge.idpledge%TYPE)
+  5     RETURN DATE
+  6    IS
+  7    lv_pl_dat DATE;
+  8    lv_mth_txt VARCHAR2(2);
+  9    lv_yr_txt VARCHAR2(4);
+ 10   BEGIN
+ 11    SELECT ADD_MONTHS(pledgedate,1)
+ 12      INTO lv_pl_dat
+ 13      FROM dd_pledge
+ 14      WHERE idpledge = p_id;
+ 15    lv_mth_txt := TO_CHAR(lv_pl_dat,'mm');
+ 16    lv_yr_txt := TO_CHAR(lv_pl_dat,'yyyy');
+ 17    RETURN TO_DATE((lv_mth_txt || '-01-' || lv_yr_txt),'mm-dd-yyyy');
+ 18   END dd_paydate1_pf;
+ 19    FUNCTION dd_payend_pf
+ 20     (p_id IN dd_pledge.idpledge%TYPE)
+ 21     RETURN DATE
+ 22    IS
+ 23    lv_pay1_dat DATE;
+ 24    lv_mths_num dd_pledge.paymonths%TYPE;
+ 25   BEGIN
+ 26    SELECT dd_paydate1_pf(idpledge), paymonths - 1
+ 27      INTO lv_pay1_dat, lv_mths_num
+ 28      FROM dd_pledge
+ 29      WHERE idpledge = p_id;
+ 30    IF lv_mths_num = 0 THEN
+ 31       RETURN lv_pay1_dat;
+ 32    ELSE
+ 33       RETURN ADD_MONTHS(lv_pay1_dat, lv_mths_num);
+ 34    END IF;
+ 35   END dd_payend_pf;
+ 36  END;
+ 37  /
+
+Package body created.
+
+SQL> 
+SQL> -- Anonymous Block, test both package functions for specific pledges
+SQL> 
+SQL> DECLARE
+  2   lv_p_id_choice_pd1 dd_pledge.idpledge%TYPE := 109;
+  3   lv_first_paydate DATE;
+  4   lv_p_id_choice_ped dd_pledge.idpledge%TYPE := 109;
+  5   lv_last_paydate DATE;
+  6  BEGIN
+  7   lv_first_paydate := pledge_pkg.dd_paydate1_pf(lv_p_id_choice_pd1);
+  8   lv_last_paydate := pledge_pkg.dd_payend_pf(lv_p_id_choice_ped);
+  9   DBMS_OUTPUT.PUT_LINE('Pledge: '||lv_p_id_choice_pd1||', First Payment Due: '||lv_first_paydate);
+ 10   DBMS_OUTPUT.PUT_LINE('Pledge: '||lv_p_id_choice_ped||', Final Payment Due: '||lv_last_paydate);
+ 11  END;
+ 12  /
+Pledge: 109, First Payment Due: 01-MAR-13                                       
+Pledge: 109, Final Payment Due: 01-FEB-14                                       
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- test both package functions in a single query all pledges and associated payment dates
+SQL> 
+SQL> SELECT p.idpledge, pledge_pkg.dd_paydate1_pf(p.idpledge), pledge_pkg.dd_payend_pf(p.idpledge)
+  2  FROM dd_pledge p;
+
+  IDPLEDGE PLEDGE_PK PLEDGE_PK                                                  
+---------- --------- ---------                                                  
+       100 01-OCT-12 01-SEP-12                                                  
+       101 01-OCT-12 01-SEP-12                                                  
+       102 01-NOV-12 01-OCT-12                                                  
+       103 01-NOV-12 01-OCT-12                                                  
+       104 01-NOV-12 01-OCT-13                                                  
+       105 01-NOV-12 01-OCT-13                                                  
+       106 01-NOV-12 01-OCT-12                                                  
+       107 01-NOV-12 01-OCT-14                                                  
+       108 01-FEB-13 01-JAN-15                                                  
+       109 01-MAR-13 01-FEB-14                                                  
+       110 01-APR-13 01-MAR-14                                                  
+
+  IDPLEDGE PLEDGE_PK PLEDGE_PK                                                  
+---------- --------- ---------                                                  
+       111 01-APR-13 01-MAR-13                                                  
+       112 01-APR-13 01-MAR-14                                                  
+
+13 rows selected.
+
+SQL> 
+SQL> -- 7-10: Adding a Pledge Display Procedure to the Package
+SQL> 
+SQL> -- Private Function Test - Works - This won't work with multiple row returns
+SQL> 
+SQL> CREATE OR REPLACE PACKAGE pledge_pkg
+  2   IS
+  3    PROCEDURE dd_plist_pp
+  4     (p_donor_id IN NUMBER,
+  5      p_firstname OUT VARCHAR2,
+  6      p_lastname OUT VARCHAR2,
+  7      p_idpledge OUT NUMBER,
+  8      p_payfirst OUT DATE,
+  9      p_paylast OUT DATE);
+ 10  END;
+ 11  /
+
+Package created.
+
+SQL> 
+SQL> CREATE OR REPLACE PACKAGE BODY pledge_pkg
+  2   IS
+  3     FUNCTION dd_paydate1_pf
+  4      (p_id IN dd_pledge.idpledge%TYPE)
+  5      RETURN DATE
+  6     IS
+  7     lv_pl_dat DATE;
+  8     lv_mth_txt VARCHAR2(2);
+  9     lv_yr_txt VARCHAR2(4);
+ 10    BEGIN
+ 11     SELECT ADD_MONTHS(pledgedate,1)
+ 12       INTO lv_pl_dat
+ 13       FROM dd_pledge
+ 14       WHERE idpledge = p_id;
+ 15     lv_mth_txt := TO_CHAR(lv_pl_dat,'mm');
+ 16     lv_yr_txt := TO_CHAR(lv_pl_dat,'yyyy');
+ 17     RETURN TO_DATE((lv_mth_txt || '-01-' || lv_yr_txt),'mm-dd-yyyy');
+ 18    END dd_paydate1_pf;
+ 19  
+ 20    FUNCTION dd_payend_pf
+ 21     (p_id IN dd_pledge.idpledge%TYPE)
+ 22     RETURN DATE
+ 23     IS
+ 24     lv_pay1_dat DATE;
+ 25     lv_mths_num dd_pledge.paymonths%TYPE;
+ 26    BEGIN
+ 27     lv_pay1_dat := dd_paydate1_pf(p_id);
+ 28     SELECT paymonths - 1
+ 29      INTO lv_mths_num
+ 30      FROM dd_pledge
+ 31      WHERE idpledge = p_id;
+ 32     IF lv_mths_num = 0 THEN
+ 33       RETURN lv_pay1_dat;
+ 34     ELSE
+ 35       RETURN ADD_MONTHS(lv_pay1_dat, lv_mths_num);
+ 36     END IF;
+ 37    END dd_payend_pf;
+ 38  
+ 39    PROCEDURE dd_plist_pp
+ 40     (p_donor_id IN NUMBER,
+ 41      p_firstname OUT VARCHAR2,
+ 42      p_lastname OUT VARCHAR2,
+ 43      p_idpledge OUT NUMBER,
+ 44      p_payfirst OUT DATE,
+ 45      p_paylast OUT DATE)
+ 46    IS
+ 47     BEGIN
+ 48      SELECT d.firstname, d.lastname, p.idpledge
+ 49      INTO p_firstname, p_lastname, p_idpledge
+ 50      FROM dd_pledge p JOIN dd_donor d
+ 51      ON p.iddonor = d.iddonor
+ 52      WHERE p.iddonor = p_donor_id;
+ 53      p_payfirst := dd_paydate1_pf(p_idpledge);
+ 54      p_paylast := dd_payend_pf(p_idpledge);
+ 55     END dd_plist_pp;
+ 56  
+ 57  END;
+ 58  /
+
+Package body created.
+
+SQL> 
+SQL> -- anonymous block test
+SQL> 
+SQL> DECLARE
+  2   lv_donor_id dd_donor.iddonor%TYPE := 302;
+  3   lv_firstname dd_donor.firstname%TYPE;
+  4   lv_lastname dd_donor.lastname%TYPE;
+  5   lv_idpledge dd_pledge.idpledge%TYPE;
+  6   lv_payfirst DATE;
+  7   lv_paylast DATE;
+  8  BEGIN
+  9   pledge_pkg.dd_plist_pp(lv_donor_id, lv_firstname, lv_lastname, lv_idpledge, lv_payfirst, lv_paylast);
+ 10   DBMS_OUTPUT.PUT_LINE('Donor Name: '||lv_firstname||' '||lv_lastname||', Pledge ID: '||lv_idpledge||', First Payment Date: '||lv_payfirst||', Last Payment Date: '||lv_paylast);
+ 11  END;
+ 12  /
+Donor Name: Patrick Lee, Pledge ID: 107, First Payment Date: 01-NOV-12, Last    
+Payment Date: 01-OCT-14                                                         
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> -- 7-11: Adding a Payment Retrieval Procedure to the Package
+SQL> 
+SQL> CREATE OR REPLACE PACKAGE pledge_pkg
+  2   IS
+  3    TYPE pledgeCur IS ref cursor;
+  4    PROCEDURE dd_plist_pp
+  5     (p_donor_id IN NUMBER,
+  6      p_firstname OUT VARCHAR2,
+  7      p_lastname OUT VARCHAR2,
+  8      p_idpledge OUT NUMBER,
+  9      p_payfirst OUT DATE,
+ 10      p_paylast OUT DATE);
+ 11    PROCEDURE dd_pays_pp
+ 12     (p_donor_id IN NUMBER,
+ 13      p_theCursor in out pledgeCur);
+ 14  END;
+ 15  /
+
+Package created.
+
+SQL> 
+SQL> CREATE OR REPLACE PACKAGE BODY pledge_pkg
+  2   IS
+  3     FUNCTION dd_paydate1_pf
+  4      (p_id IN dd_pledge.idpledge%TYPE)
+  5      RETURN DATE
+  6     IS
+  7     lv_pl_dat DATE;
+  8     lv_mth_txt VARCHAR2(2);
+  9     lv_yr_txt VARCHAR2(4);
+ 10    BEGIN
+ 11     SELECT ADD_MONTHS(pledgedate,1)
+ 12       INTO lv_pl_dat
+ 13       FROM dd_pledge
+ 14       WHERE idpledge = p_id;
+ 15     lv_mth_txt := TO_CHAR(lv_pl_dat,'mm');
+ 16     lv_yr_txt := TO_CHAR(lv_pl_dat,'yyyy');
+ 17     RETURN TO_DATE((lv_mth_txt || '-01-' || lv_yr_txt),'mm-dd-yyyy');
+ 18    END dd_paydate1_pf;
+ 19    FUNCTION dd_payend_pf
+ 20     (p_id IN dd_pledge.idpledge%TYPE)
+ 21     RETURN DATE
+ 22     IS
+ 23     lv_pay1_dat DATE;
+ 24     lv_mths_num dd_pledge.paymonths%TYPE;
+ 25    BEGIN
+ 26     lv_pay1_dat := dd_paydate1_pf(p_id);
+ 27     SELECT paymonths - 1
+ 28      INTO lv_mths_num
+ 29      FROM dd_pledge
+ 30      WHERE idpledge = p_id;
+ 31     IF lv_mths_num = 0 THEN
+ 32       RETURN lv_pay1_dat;
+ 33     ELSE
+ 34       RETURN ADD_MONTHS(lv_pay1_dat, lv_mths_num);
+ 35     END IF;
+ 36    END dd_payend_pf;
+ 37    PROCEDURE dd_plist_pp
+ 38     (p_donor_id IN NUMBER,
+ 39      p_firstname OUT VARCHAR2,
+ 40      p_lastname OUT VARCHAR2,
+ 41      p_idpledge OUT NUMBER,
+ 42      p_payfirst OUT DATE,
+ 43      p_paylast OUT DATE)
+ 44    IS
+ 45     BEGIN
+ 46      SELECT d.firstname, d.lastname, p.idpledge
+ 47      INTO p_firstname, p_lastname, p_idpledge
+ 48      FROM dd_pledge p JOIN dd_donor d
+ 49      ON p.iddonor = d.iddonor
+ 50      WHERE p.iddonor = p_donor_id;
+ 51      p_payfirst := dd_paydate1_pf(p_idpledge);
+ 52      p_paylast := dd_payend_pf(p_idpledge);
+ 53     END dd_plist_pp;
+ 54    PROCEDURE dd_pays_pp
+ 55      (p_donor_id IN NUMBER,
+ 56       p_theCursor in out pledgeCur)
+ 57    IS
+ 58     BEGIN
+ 59      OPEN p_theCursor FOR SELECT p.idpledge, d.lastname, pa.payamt, pa.paydate
+ 60                       FROM dd_pledge p JOIN dd_donor d
+ 61                       ON p.iddonor = d.iddonor JOIN dd_payment pa
+ 62                       ON p.idpledge = pa.idpledge
+ 63                       WHERE d.iddonor = p_donor_id;
+ 64     END dd_pays_pp;
+ 65  END;
+ 66  /
+
+Package body created.
+
+SQL> 
+SQL> -- anonymous block test
+SQL> 
+SQL> DECLARE
+  2   lv_donor_id dd_pledge.iddonor%TYPE := 301;
+  3   pledge_cur pledge_pkg.pledgeCur;
+  4   TYPE type_pledge IS RECORD(
+  5      idpledge dd_pledge.idpledge%TYPE,
+  6      lastname dd_donor.lastname%TYPE,
+  7      payamt dd_payment.payamt%TYPE,
+  8      paydate DATE);
+  9   rec_pledge type_pledge;
+ 10  BEGIN
+ 11   pledge_pkg.dd_pays_pp(lv_donor_id, pledge_cur);
+ 12   LOOP
+ 13    FETCH pledge_cur INTO rec_pledge;
+ 14    EXIT WHEN pledge_cur%NOTFOUND;
+ 15     DBMS_OUTPUT.PUT_LINE('Pledge ID: '||rec_pledge.idpledge||' '||rec_pledge.lastname||', Donor Lastname: '||rec_pledge.lastname||', Payment Amount: '||rec_pledge.payamt||', Payment Date: '||rec_pledge.paydate);
+ 16   END LOOP;
+ 17  END;
+ 18  /
+Pledge ID: 106 Treanor, Donor Lastname: Treanor, Payment Amount: 75, Payment    
+Date: 12-OCT-12                                                                 
+Pledge ID: 109 Treanor, Donor Lastname: Treanor, Payment Amount: 30, Payment    
+Date: 01-FEB-13                                                                 
+Pledge ID: 109 Treanor, Donor Lastname: Treanor, Payment Amount: 30, Payment    
+Date: 01-MAR-13                                                                 
+Pledge ID: 109 Treanor, Donor Lastname: Treanor, Payment Amount: 30, Payment    
+Date: 01-APR-13                                                                 
+Pledge ID: 109 Treanor, Donor Lastname: Treanor, Payment Amount: 30, Payment    
+Date: 01-MAY-13                                                                 
+
+PL/SQL procedure successfully completed.
+
+SQL> 
+SQL> spool off
